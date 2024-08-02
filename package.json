@@ -1,0 +1,24 @@
+{
+  "dependencies": {
+    "@googlemaps/google-maps-services-js": "^3.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "date-fns": "^3.6.0",
+    "gpt3-tokenizer": "^1.1.5",
+    "html-entities": "^2.5.2",
+    "html-validate": "^8.21.0",
+    "http-proxy-agent": "^7.0.2",
+    "joi": "^17.13.0",
+    "jsdom": "^24.0.0",
+    "libphonenumber-js": "^1.11.4",
+    "node-fetch": "^3.3.2",
+    "normalize-email": "^1.1.1",
+    "openai": "^4.39.0",
+    "pdf2table": "^0.0.2",
+    "puppeteer": "^22.7.1",
+    "validator": "^13.12.0",
+    "zod": "^3.23.5"
+  },
+  "devDependencies": {
+    "@types/validator": "^13.12.0"
+  }
+}
