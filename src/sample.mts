@@ -1,11 +1,13 @@
-import { vectorizeCorpus } from "./parser.mts";
+import type { TextCorpus } from "./types.mts";
+import { type Vector, vectorizeCorpus } from "./vector.mts";
+
 
 /**
  * Returns the average length of strings in an array
  * @param strings
  * @returns
  */
-export function averageStringLength(strings: string[]): number {
+export function averageStringLength(strings: TextCorpus): number {
   return (
     strings.reduce((acc, sample) => acc + sample.length, 0) / strings.length
   );
@@ -16,7 +18,7 @@ export function averageStringLength(strings: string[]): number {
  * @param strings
  * @returns
  */
-export function shortestString(strings: string[]): string {
+export function shortestString(strings: TextCorpus): string {
   return strings.reduce((shortest, current) =>
     current.length < shortest.length ? current : shortest
   );
@@ -27,7 +29,7 @@ export function shortestString(strings: string[]): string {
  * @param strings
  * @returns
  */
-export function longestString(strings: string[]): string {
+export function longestString(strings: TextCorpus): string {
   return strings.reduce((longest, current) =>
     current.length > longest.length ? current : longest
   );
@@ -46,29 +48,26 @@ export function randomSample<T>(array: T[], count: number = 1): T[] {
   );
 }
 
-function sampleDistance(a: number[], b: number[]): number {
-  return 0;
+function sampleDistance(a: Vector, b: Vector): number {
+  throw new Error("sample distance not implemented")
 }
 
 
-export function selectSample(corpus: string[], sampleSize: number) {
-  const { structuralDictionary, contentDictionary, vectorized } = vectorizeCorpus(corpus);
+export function selectSample(textCorpus: TextCorpus, sampleSize: number): TextCorpus {
+  const corpus = vectorizeCorpus(textCorpus);
 
-  console.log(structuralDictionary);
-  console.log(contentDictionary);
-
-  if (sampleSize > corpus.length) {
+  if (sampleSize > textCorpus.length) {
     throw new Error("Sample size must be less than the corpus size");
   }
 
-  const samples = [vectorized[0]];
-  const samplesHTML = [corpus[0]];
+  const samples = [corpus.vectorized[0]];
+  const samplesHTML = [textCorpus[0]];
   while (samples.length < sampleSize) {
       let maxMinDistance = -1;
-      let farthestSample: number[] | null = null
+      let farthestSample: Vector | null = null
       let farthestSampleHTML: string | null = null
-      for (let index = 0; index < vectorized.length; index++) {
-        const vector = vectorized[index];
+      for (let index = 0; index < corpus.vectorized.length; index++) {
+        const vector = corpus.vectorized[index];
         const html = corpus[index];
           if (!samples.includes(vector)) {
               const minDistance = Math.min(...samples.map(s => sampleDistance(s, vector)));

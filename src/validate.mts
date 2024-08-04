@@ -1,8 +1,8 @@
-import { schema as schem } from "./canada/manitoba/schema.mts";
+import { schema as schem } from "./data/canada/manitoba/schema.mts";
 import { SAMPLE_FILE, DATASET_FILE, REGULAR_FILE, CORPUS_FILE, SCHEMA_ERRORS, CORPUS_PATH } from "./files.mts";
 import { loadCorpusFiles, readJSON, writeJSON } from "./io.mts";
 import { htmlToText } from "./process.mts";
-import { type Datum, type Sample } from "./types.mts";
+import type { Datum, Sample } from "./types.mts";
 
 /**
  * Regularize the dataset to nullable text fields and Sample format

@@ -6,7 +6,6 @@ import {
   parseTag,
   tagToToken,
   parser,
-  vectorizeCorpus,
   isLexedTag,
   parseContent,
   replaceRegex,
@@ -73,21 +72,6 @@ Deno.test("parser should parse HTML into IR tokens", () => {
     `</div>`,
   ];
   assertEquals(parser(input), expected);
-});
-
-Deno.test("vectorizeCorpus should return vectorized representation of HTML corpus", () => {
-  const input = [`<div class="test">Hello <span>world</span></div>`];
-  const result = vectorizeCorpus(input);
-
-  assertEquals(result.vectorized.length, 1);
-  assertEquals(result.vectorized[0].length, 7);
-
-  assertEquals(
-    Array.from(result.structuralDictionary.keys()).sort(),
-    [`<div class >`, `<span>`, `</div>`, `</span>`].sort()
-  );
-
-  assertEquals(Array.from(result.contentDictionary.keys()), ["test", "Hello", "world"]);
 });
 
 Deno.test("isLexedTag should identify if a token is a tag", () => {

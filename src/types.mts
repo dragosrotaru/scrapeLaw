@@ -1,5 +1,7 @@
 export type NullableString = string | null;
 
+export type TextCorpus = string[];
+
 export type Data = {
   data: NullableString;
   prefix: NullableString;
