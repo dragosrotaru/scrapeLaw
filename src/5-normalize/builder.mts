@@ -1,4 +1,10 @@
+// 3rd Party
 import crypto from 'node:crypto';
+
+// Utility
+import { writeJSONFile } from '../utility/io.mts';
+
+// This Step
 import type {
   DecisionMethod,
    EntityRecognition,
@@ -16,7 +22,7 @@ import type {
   RelationAttribute,
   RelationType
 } from "./types.mts";
-import { writeJSON } from '../io.mts';
+
 
 export class DecisionBuilder {
   private entities: Entity[] = [];
@@ -138,10 +144,10 @@ export class DecisionBuilder {
   }
 
   save() {
-    writeJSON("./data/entities.json", this.entities);
-    writeJSON("./data/recognitions.json", this.recognitions);
-    writeJSON("./data/attributes.json", this.attributes);
-    writeJSON("./data/records.json", this.records);
+    writeJSONFile("./data/entities.json", this.entities);
+    writeJSONFile("./data/recognitions.json", this.recognitions);
+    writeJSONFile("./data/attributes.json", this.attributes);
+    writeJSONFile("./data/records.json", this.records);
 
   }
 }

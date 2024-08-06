@@ -1,9 +1,2 @@
-const PATH = "./data/canada/yukon/";
+const PATH = "./data/canada/alberta/";
 export const CORPUS_PATH = PATH + "detail";
-export const CORPUS_FILE = PATH + "index.json";
-export const SAMPLE_FILE = PATH + "samples.json";
-export const ANALYSIS_FILE = PATH + "analysis.json";
-export const REPRODUCTION_FILE = PATH + "reproduction.json";
-export const DATASET_FILE = PATH + "dataset.json";
-export const REGULAR_FILE = PATH + "regular.json";
-export const SCHEMA_ERRORS = PATH + "schema_errors.json";

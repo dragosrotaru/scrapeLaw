@@ -1,12 +1,10 @@
-import { REGULAR_FILE } from "./files.mts";
-import { readJSON } from "./io.mts";
-import { emailToDomain, htmlToDate, htmlToEmail, htmlToPhone, htmlToURL, manitobaPersonName } from "./process.mts"
-import { type Sample } from "./types.mts";
-import {
-  type Source,
-  type DecisionMethod,
-} from "./domain/types.mts";
-import { DecisionBuilder } from "./domain/builder.mts";
+// Utility
+import { readJSONFile } from "../utility/io.mts";
+import { emailToDomain, htmlToDate, htmlToEmail, htmlToPhone, htmlToURL, manitobaPersonName } from "../utility/validators.mts"
+
+// This Step
+import type { Source, DecisionMethod } from "./types.mts";
+import { DecisionBuilder } from "./builder.mts";
 
 const SOURCE: Source = {
   id: "law_society_manitoba",
@@ -22,7 +20,7 @@ const decisionMethod: DecisionMethod = {
 
 function recognizeEntities() {
   const decisionBuilder = new DecisionBuilder(decisionMethod);
-  const regular = readJSON(REGULAR_FILE) as Sample[];
+  const regular = readJSONFile(REGULAR_FILE) as Sample[];
   for (const sample of regular) {
     const { output, input } = sample;
 

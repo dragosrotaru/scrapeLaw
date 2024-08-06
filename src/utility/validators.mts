@@ -1,9 +1,14 @@
+// 3rd Party
 import { decode } from "html-entities";
 import parsePhoneNumber from "libphonenumber-js";
 import validator from "validator";
 import normalizeEmail from "normalize-email";
 import { parse, format, isValid, parseISO } from "date-fns";
-import { NullableString } from "./types.mts";
+
+// Utility
+import type { NullableString } from "./types.mts";
+
+
 // todo issue with DENO
 // import { Client as GoogleMapsClient } from "@googlemaps/google-maps-services-js";
 

@@ -1,6 +1,11 @@
+// 3rd Party
 import * as validate from "html-validate/node";
-import { loadCorpusFiles } from "./io.mts";
-import { CORPUS_PATH } from "./files.mts";
+
+// Global
+import { CORPUS_PATH } from "../files.mts";
+
+// Utility
+import { readTextFilesDir } from "../utility/io.mts";
 
 // https://validator.w3.org/nu
 
@@ -8,7 +13,7 @@ async function validateHTML() {
   // todo pick ruleset
   const htmlvalidate = new validate.HtmlValidate({ extends: ["html-validate:recommended"] });
   // todo standardize the format of the corpus files so we can merge reports
-  const originalCorpus = loadCorpusFiles(CORPUS_PATH);
+  const originalCorpus = readTextFilesDir(CORPUS_PATH);
 
   const invalid: {
     sample: { id: string; data: string };

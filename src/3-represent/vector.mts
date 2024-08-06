@@ -1,10 +1,12 @@
+// Utility
+import type { Vector } from "../utility/types.mts";
+
+// This Step
 import { isLexedTag, parser } from "./parser.mts";
 
 export const STATIC_TOKEN = "STATIC";
 export const STATIC_TOKEN_INDEX = 0;
 export const STATIC_TOKEN_FREQUENCY = 1;
-
-export type Vector = number[];
 
 export type TokenMap = Map<string, number>;
 
@@ -35,6 +37,11 @@ export function isStaticToken(tokenIndex: number): boolean {
  */
 export function isStructuralToken(tokenIndex: number): boolean {
   return tokenIndex % 2 === 1;
+}
+
+
+export function vectorDistance(a: Vector, b: Vector): number {
+  throw new Error("sample distance not implemented")
 }
 
 /**

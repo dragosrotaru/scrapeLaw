@@ -1,14 +1,18 @@
-import { shortestString } from "./sample.mts";
+// Global
+import type { TextCorpus } from "../interfaces.mts";
+
+// Utility
+import { shortestString } from "../utility/util.mts";
 
 /**
  * Remove common prefix and postfix from a corpus
  * @param corpus
  * @returns
  */
-export function isolateCorpus(corpus: string[]) {
+export function isolateCorpus(corpus: TextCorpus) {
   // We get the static prefix and postfix of the corpus
-  const prefix = findStaticPrefix(corpus);
-  const postfix = findStaticPostfix(corpus);
+  const prefix = findStaticHTMLPrefix(corpus);
+  const postfix = findStaticHTMLPostfix(corpus);
 
   // Strip the prefix and postfix from the corpus
   corpus = corpus.map((sample) => sample.substring(prefix.length));
@@ -16,7 +20,7 @@ export function isolateCorpus(corpus: string[]) {
     sample.substring(0, sample.length - postfix.length)
   );
 
-  return { prefix, postfix, corpus };
+  return { prefix, postfix, isolated: corpus };
 }
 
 /**
@@ -24,7 +28,7 @@ export function isolateCorpus(corpus: string[]) {
  * @param corpus
  * @returns
  */
-function findStaticPrefix(corpus: string[]): string {
+function findStaticHTMLPrefix(corpus: TextCorpus): string {
   if (corpus.length === 0) return "";
   let staticPrefix = "";
   let index = 0;
@@ -65,7 +69,7 @@ function findStaticPrefix(corpus: string[]): string {
 * @param corpus
 * @returns
 */
-function findStaticPostfix(corpus: string[]): string {
+function findStaticHTMLPostfix(corpus: TextCorpus): string {
   if (corpus.length === 0) return "";
   let staticPostfix = "";
   let index = 0;

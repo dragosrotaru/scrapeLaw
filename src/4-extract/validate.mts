@@ -1,16 +1,20 @@
-import { schema as schem } from "./data/canada/manitoba/schema.mts";
-import { SAMPLE_FILE, DATASET_FILE, REGULAR_FILE, CORPUS_FILE, SCHEMA_ERRORS, CORPUS_PATH } from "./files.mts";
-import { loadCorpusFiles, readJSON, writeJSON } from "./io.mts";
-import { htmlToText } from "./process.mts";
-import type { Datum, Sample } from "./types.mts";
+// Data Specific
+import { schema as schem } from "../data/canada/manitoba/schema.mts";
+
+// Global
+import { CORPUS_PATH } from "../files.mts";
+
+// Utility
+import { readTextFilesDir, readJSONFile, writeJSONFile } from "../utility/io.mts";
+import { htmlToText } from "../utility/validators.mts";
 
 /**
  * Regularize the dataset to nullable text fields and Sample format
  */
 function regularize() {
-    const dataset = readJSON(DATASET_FILE) as Datum[];
+    const dataset = readJSONFile(DATASET_FILE) as Datum[];
     // const corpus = readJSON(CORPUS_FILE).results as string[];
-    const corpus = loadCorpusFiles(CORPUS_PATH);
+    const corpus = readTextFilesDir(CORPUS_PATH);
     const regular = corpus.map((input, index) => {
         const output = dataset[index];
         for (const [field, value] of Object.entries(output)) {
@@ -18,7 +22,7 @@ function regularize() {
         }
         return { input: input.data, output };
     });
-    writeJSON(REGULAR_FILE, regular);
+    writeJSONFile(REGULAR_FILE, regular);
     console.log("regularized", regular.length);
 }
 
@@ -26,8 +30,8 @@ function regularize() {
  * Run the unit tests
  */
 function unit() {
-    const samples = readJSON(SAMPLE_FILE) as Sample[];
-    const regular = readJSON(REGULAR_FILE) as Sample[];
+    const samples = readJSONFile(SAMPLE_FILE) as Sample[];
+    const regular = readJSONFile(REGULAR_FILE) as Sample[];
     console.log("sample count", samples.length);
     for (const sample of samples) {
         // find the output of the regularized dataset
@@ -75,7 +79,7 @@ function unit() {
  * Validate the regularized dataset against the schema
  */
 function schema() {
-    const regular = readJSON(REGULAR_FILE) as Sample[];
+    const regular = readJSONFile(REGULAR_FILE) as Sample[];
     const errors: any[] = [];
     for (const sample of regular) {
         const { output } = sample;
@@ -85,5 +89,5 @@ function schema() {
         }
     }
     console.log("errors found:", errors.length);
-    writeJSON(SCHEMA_ERRORS, errors);
+    writeJSONFile(SCHEMA_ERRORS, errors);
 }
