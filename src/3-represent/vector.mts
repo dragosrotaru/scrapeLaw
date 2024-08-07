@@ -1,3 +1,6 @@
+// Global
+import type { CorpusFrequency, CorpusMaps, TokenMap, VectorCorpus } from "../interfaces.mts";
+
 // Utility
 import type { Vector } from "../utility/types.mts";
 
@@ -7,19 +10,6 @@ import { isLexedTag, parser } from "./parser.mts";
 export const STATIC_TOKEN = "STATIC";
 export const STATIC_TOKEN_INDEX = 0;
 export const STATIC_TOKEN_FREQUENCY = 1;
-
-export type TokenMap = Map<string, number>;
-
-export type VectorizedCorpus = {
-  structuralMap: TokenMap;
-  contentMap: TokenMap;
-  vectorized: Vector[];
-};
-
-export type CorpusFrequency = {
-  structural: TokenMap;
-  content: TokenMap;
-};
 
 /**
  * Checks if a token is a static token
@@ -52,7 +42,7 @@ export function vectorDistance(a: Vector, b: Vector): number {
  * @param corpus
  * @returns
  */
-export function vectorizeCorpus(corpus: string[]): VectorizedCorpus {
+export function vectorizeCorpus(corpus: string[]): [CorpusMaps, VectorCorpus] {
   const structuralMap: TokenMap = new Map();
   const contentMap: TokenMap = new Map();
   const vectorized: Vector[] = [];
@@ -85,7 +75,7 @@ export function vectorizeCorpus(corpus: string[]): VectorizedCorpus {
     vectorized.push(sampleVector);
   }
 
-  return { structuralMap, contentMap: contentMap, vectorized };
+  return [ { structuralMap, contentMap }, vectorized ];
 }
 
 /* Vector to Textual Token */
@@ -97,7 +87,7 @@ export function vectorizeCorpus(corpus: string[]): VectorizedCorpus {
  * @returns
  */
 function componentToText(
-  { contentMap, structuralMap }: VectorizedCorpus,
+  { contentMap, structuralMap }: CorpusMaps,
   value: number
 ): string {
   if (isStaticToken(value)) return STATIC_TOKEN;
@@ -109,37 +99,38 @@ function componentToText(
 /**
  * Converts a vector to its text representation
  * @param vector A vector from the corpus
- * @param result VectorizedCorpus
+ * @param maps CorpusMaps
  * @returns A string representation of the vector
  */
 export function vectorToText(
   vector: Vector,
-  corpus: VectorizedCorpus
+  maps: CorpusMaps
 ): string[] {
-  return vector.map((tokenIndex) => componentToText(corpus, tokenIndex));
+  return vector.map((tokenIndex) => componentToText(maps, tokenIndex));
 }
 
 /* Frequency Related */
 
 /**
  * Generates frequency maps for structural and content tokens based on the vectorized corpus
- * @param result type CorpusFrequency
+ * @param maps type CorpusMaps
  * @returns Object containing frequency maps for structural and content tokens
  */
 export function generateFrequencyMaps(
-  corpus: VectorizedCorpus
+  corpus: VectorCorpus,
+  maps: CorpusMaps
 ): CorpusFrequency {
-  const { vectorized, structuralMap, contentMap } = corpus;
+  const { structuralMap, contentMap } = maps;
   const structuralFrequency: TokenMap = new Map();
   const contentFrequency: TokenMap = new Map();
 
   // Count tokens for each item in the corpus
-  for (const sampleVector of vectorized) {
+  for (const sampleVector of corpus) {
     const uniqueStructuralTokens = new Set<string>();
     const uniqueContentTokens = new Set<string>();
 
     for (const tokenIndex of sampleVector) {
-      const token = componentToText(corpus, tokenIndex);
+      const token = componentToText(maps, tokenIndex);
       isStructuralToken(tokenIndex)
         ? uniqueStructuralTokens.add(token)
         : uniqueContentTokens.add(token);
@@ -155,7 +146,7 @@ export function generateFrequencyMaps(
   }
 
   // normalize the frequency maps
-  const totalSamples = vectorized.length;
+  const totalSamples = corpus.length;
   for (const [token, count] of structuralFrequency.entries()) {
     structuralFrequency.set(token, count / totalSamples);
   }
@@ -169,17 +160,17 @@ export function generateFrequencyMaps(
 /**
  * Generates a frequency vector for a given vector
  * @param vector
- * @param corpus
+ * @param maps
  * @param freqMaps
  * @returns
  */
 export function generateFrequencyVector(
   vector: Vector,
-  corpus: VectorizedCorpus,
+  maps: CorpusMaps,
   freq: CorpusFrequency
 ): Vector {
   return vector.map((tokenIndex) => {
-    const token = componentToText(corpus, tokenIndex);
+    const token = componentToText(maps, tokenIndex);
     const freqMap = isStructuralToken(tokenIndex) ? freq.structural : freq.content;
     if (token === STATIC_TOKEN) return STATIC_TOKEN_FREQUENCY;
     return freqMap.get(token)!;
@@ -191,18 +182,18 @@ export function generateFrequencyVector(
 /**
  * Creates a new vector with infrequent tokens zeroed out
  * @param vector A vector from the corpus
- * @param corpus Output from vectorizeCorpus function
- * @param corpusFreq Output from generateFrequencyMaps function
+ * @param maps CorpusMaps
+ * @param freq CorpusFreq
  * @returns A new vector with frequent tokens zeroed out
  */
 export function applyStaticThreshold(
   vector: Vector,
-  corpus: VectorizedCorpus,
+  maps: CorpusMaps,
   freq: CorpusFrequency,
   threshold: number
 ): Vector {
   return vector.map((tokenIndex) => {
-    const token = componentToText(corpus, tokenIndex);
+    const token = componentToText(maps, tokenIndex);
     const freqMap = isStructuralToken(tokenIndex)
       ? freq.structural
       : freq.content;

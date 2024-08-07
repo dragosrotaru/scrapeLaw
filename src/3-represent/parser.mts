@@ -109,7 +109,7 @@ export function lexer(html: string): string[] {
  * @param token
  * @returns
  */
-export function isLexedTag(token: string) {
+export function isLexedTag(token: string): boolean {
   return token.startsWith(OPEN) && token.endsWith(CLOSE);
 }
 
@@ -118,7 +118,7 @@ export function isLexedTag(token: string) {
  * @param token
  * @returns
  */
-export function parseContent(text: string) {
+export function parseContent(text: string): string[] {
   return text.trim().split(" ");
 }
 

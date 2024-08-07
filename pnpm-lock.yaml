@@ -39,8 +39,8 @@ importers:
         specifier: ^24.0.0
         version: 24.1.1
       libphonenumber-js:
-        specifier: ^1.11.4
-        version: 1.11.4
+        specifier: ^1.11.5
+        version: 1.11.5
       node-fetch:
         specifier: ^3.3.2
         version: 3.3.2
@@ -48,14 +48,14 @@ importers:
         specifier: ^1.1.1
         version: 1.1.1
       openai:
-        specifier: ^4.39.0
-        version: 4.53.0
+        specifier: ^4.54.0
+        version: 4.54.0
       pdf2table:
         specifier: ^0.0.2
         version: 0.0.2
       puppeteer:
-        specifier: ^22.7.1
-        version: 22.14.0
+        specifier: ^22.15.0
+        version: 22.15.0
       react:
         specifier: ^18.3.1
         version: 18.3.1
@@ -66,9 +66,6 @@ importers:
         specifier: ^3.23.5
         version: 3.23.8
     devDependencies:
-      '@types/ink':
-        specifier: ^2.0.3
-        version: 2.0.3(react@18.3.1)
       '@types/validator':
         specifier: ^13.12.0
         version: 13.12.0
@@ -137,10 +134,6 @@ packages:
 
   '@tootallnate/quickjs-emscripten@0.23.0':
     resolution: {integrity: sha512-C5Mc6rdnsaJDjO3UpGW/CQTHtCKaYlScZTly4JIu97Jxo/odCiH0ITnDXSJPTOrEKk/ycSZ0AOgTmkDtkOsvIA==}
-
-  '@types/ink@2.0.3':
-    resolution: {integrity: sha512-DYKIKEJqhsGfQ/jgX0t9BzfHmBJ/9dBBT2MDsHAQRAfOPhEe7LZm5QeNBx1J34/e108StCPuJ3r4bh1y38kCJA==}
-    deprecated: This is a stub types definition. ink provides its own type definitions, so you do not need this installed.
 
   '@types/node-fetch@2.6.11':
     resolution: {integrity: sha512-24xFj9R5+rfQJLRyM56qh+wnVSYhyXC2tkoBndtY0U+vubqNsYXGjufB2nn8Q6gt0LrARwL6UBtMCSVCwl4B1g==}
@@ -279,8 +272,8 @@ packages:
     resolution: {integrity: sha512-VqR8m68vM46BNnuZ5NtnGBKIE/DfN0cRIzg9n40EIq9NOv90ayxLBXA8fXC5gquFRGJSTRqBq25Jt2ECLR431Q==}
     engines: {node: '>= 6'}
 
-  chromium-bidi@0.6.2:
-    resolution: {integrity: sha512-4WVBa6ijmUTVr9cZD4eicQD8Mdy/HCX3bzEIYYpmk0glqYLoWH+LqQEvV9RpDRzoQSbY1KJHloYXbDMXMbDPhg==}
+  chromium-bidi@0.6.3:
+    resolution: {integrity: sha512-qXlsCmpCZJAnoTYI83Iu6EdYQpMYdVkCfq08KDh2pmlVqK5t5IA9mGs4/LwCwp4fqisSOMXZxP3HIh8w8aRn0A==}
     peerDependencies:
       devtools-protocol: '*'
 
@@ -369,6 +362,15 @@ packages:
 
   debug@4.3.5:
     resolution: {integrity: sha512-pt0bNEmneDIvdL1Xsd9oDQ/wrQRkXDT4AUWlNZNPKvW5x/jyO9VFXkJUP07vQ2upmw5PlaITaPKc31jK13V+jg==}
+    engines: {node: '>=6.0'}
+    peerDependencies:
+      supports-color: '*'
+    peerDependenciesMeta:
+      supports-color:
+        optional: true
+
+  debug@4.3.6:
+    resolution: {integrity: sha512-O/09Bd4Z1fBrU4VzkhFqVgpPzaGbw6Sm9FEkBT1A/YBXQFGuuSxa1dN2nxgxS34JmKXqYx8CZAwEVoJFImUXIg==}
     engines: {node: '>=6.0'}
     peerDependencies:
       supports-color: '*'
@@ -711,8 +713,8 @@ packages:
     resolution: {integrity: sha512-o+NO+8WrRiQEE4/7nwRJhN1HWpVmJm511pBHUxPLtp0BUISzlBplORYSmTclCnJvQq2tKu/sgl3xVpkc7ZWuQQ==}
     engines: {node: '>=6'}
 
-  libphonenumber-js@1.11.4:
-    resolution: {integrity: sha512-F/R50HQuWWYcmU/esP5jrH5LiWYaN7DpN0a/99U8+mnGGtnx8kmRE+649dQh3v+CowXXZc8vpkf5AmYkO0AQ7Q==}
+  libphonenumber-js@1.11.5:
+    resolution: {integrity: sha512-TwHR5BZxGRODtAfz03szucAkjT5OArXr+94SMtAM2pYXIlQNVMrxvb6uSCbnaJJV6QXEyICk7+l6QPgn72WHhg==}
 
   lines-and-columns@1.2.4:
     resolution: {integrity: sha512-7ylylesZQ/PV29jhEDl3Ufjo6ZX7gCqJr5F7PKrqc93v7fzSymt1BpwEU8nAUXs8qzzvqhbjhK5QZg6Mt/HkBg==}
@@ -800,8 +802,8 @@ packages:
     resolution: {integrity: sha512-kbpaSSGJTWdAY5KPVeMOKXSrPtr8C8C7wodJbcsd51jRnmD+GZu8Y0VoU6Dm5Z4vWr0Ig/1NKuWRKf7j5aaYSg==}
     engines: {node: '>=6'}
 
-  openai@4.53.0:
-    resolution: {integrity: sha512-XoMaJsSLuedW5eoMEMmZbdNoXgML3ujcU5KfwRnC6rnbmZkHE2Q4J/SArwhqCxQRqJwHnQUj1LpiROmKPExZJA==}
+  openai@4.54.0:
+    resolution: {integrity: sha512-e/12BdtTtj+tXs7iHm+Dm7H7WjEWnw7O52B2wSfCQ6lD5F6cvjzo7cANXy5TJ1Q3/qc8YRPT5wBTTFtP5sBp1g==}
     hasBin: true
 
   pac-proxy-agent@7.0.2:
@@ -885,12 +887,12 @@ packages:
     resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
     engines: {node: '>=6'}
 
-  puppeteer-core@22.14.0:
-    resolution: {integrity: sha512-rl4tOY5LcA3e374GAlsGGHc05HL3eGNf5rZ+uxkl6id9zVZKcwcp1Z+Nd6byb6WPiPeecT/dwz8f/iUm+AZQSw==}
+  puppeteer-core@22.15.0:
+    resolution: {integrity: sha512-cHArnywCiAAVXa3t4GGL2vttNxh7GqXtIYGym99egkNJ3oG//wL9LkvO4WE8W1TJe95t1F1ocu9X4xWaGsOKOA==}
     engines: {node: '>=18'}
 
-  puppeteer@22.14.0:
-    resolution: {integrity: sha512-MGTR6/pM8zmWbTdazb6FKnwIihzsSEXBPH49mFFU96DNZpQOevCAZMnjBZGlZRGRzRK6aADCavR6SQtrbv5dQw==}
+  puppeteer@22.15.0:
+    resolution: {integrity: sha512-XjCY1SiSEi1T7iSYuxS82ft85kwDJUS7wj1Z0eGVXKdtr5g4xnVcbjwxhq5xBnpK/E7x1VZZoJDxpjAOasHT4Q==}
     engines: {node: '>=18'}
     hasBin: true
 
@@ -1289,16 +1291,6 @@ snapshots:
 
   '@tootallnate/quickjs-emscripten@0.23.0': {}
 
-  '@types/ink@2.0.3(react@18.3.1)':
-    dependencies:
-      ink: 5.0.1(react@18.3.1)
-    transitivePeerDependencies:
-      - '@types/react'
-      - bufferutil
-      - react
-      - react-devtools-core
-      - utf-8-validate
-
   '@types/node-fetch@2.6.11':
     dependencies:
       '@types/node': 18.19.42
@@ -1457,7 +1449,7 @@ snapshots:
       parse5: 7.1.2
       parse5-htmlparser2-tree-adapter: 7.0.0
 
-  chromium-bidi@0.6.2(devtools-protocol@0.0.1312386):
+  chromium-bidi@0.6.3(devtools-protocol@0.0.1312386):
     dependencies:
       devtools-protocol: 0.0.1312386
       mitt: 3.0.1
@@ -1544,6 +1536,10 @@ snapshots:
   date-fns@3.6.0: {}
 
   debug@4.3.5:
+    dependencies:
+      ms: 2.1.2
+
+  debug@4.3.6:
     dependencies:
       ms: 2.1.2
 
@@ -1894,7 +1890,7 @@ snapshots:
 
   kleur@4.1.5: {}
 
-  libphonenumber-js@1.11.4: {}
+  libphonenumber-js@1.11.5: {}
 
   lines-and-columns@1.2.4: {}
 
@@ -1960,7 +1956,7 @@ snapshots:
     dependencies:
       mimic-fn: 2.1.0
 
-  openai@4.53.0:
+  openai@4.54.0:
     dependencies:
       '@types/node': 18.19.42
       '@types/node-fetch': 2.6.11
@@ -1969,7 +1965,6 @@ snapshots:
       form-data-encoder: 1.7.2
       formdata-node: 4.4.1
       node-fetch: 2.7.0
-      web-streams-polyfill: 3.3.3
     transitivePeerDependencies:
       - encoding
 
@@ -2063,11 +2058,11 @@ snapshots:
 
   punycode@2.3.1: {}
 
-  puppeteer-core@22.14.0:
+  puppeteer-core@22.15.0:
     dependencies:
       '@puppeteer/browsers': 2.3.0
-      chromium-bidi: 0.6.2(devtools-protocol@0.0.1312386)
-      debug: 4.3.5
+      chromium-bidi: 0.6.3(devtools-protocol@0.0.1312386)
+      debug: 4.3.6
       devtools-protocol: 0.0.1312386
       ws: 8.18.0
     transitivePeerDependencies:
@@ -2075,12 +2070,12 @@ snapshots:
       - supports-color
       - utf-8-validate
 
-  puppeteer@22.14.0:
+  puppeteer@22.15.0:
     dependencies:
       '@puppeteer/browsers': 2.3.0
       cosmiconfig: 9.0.0
       devtools-protocol: 0.0.1312386
-      puppeteer-core: 22.14.0
+      puppeteer-core: 22.15.0
     transitivePeerDependencies:
       - bufferutil
       - supports-color

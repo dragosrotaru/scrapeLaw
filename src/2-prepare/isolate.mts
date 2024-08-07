@@ -9,7 +9,11 @@ import { shortestString } from "../utility/util.mts";
  * @param corpus
  * @returns
  */
-export function isolateCorpus(corpus: TextCorpus) {
+export function isolateCorpus(corpus: TextCorpus): {
+  prefix: string;
+  postfix: string;
+  isolated: TextCorpus;
+} {
   // We get the static prefix and postfix of the corpus
   const prefix = findStaticHTMLPrefix(corpus);
   const postfix = findStaticHTMLPostfix(corpus);
@@ -33,74 +37,92 @@ function findStaticHTMLPrefix(corpus: TextCorpus): string {
   let staticPrefix = "";
   let index = 0;
   const shortestSample = shortestString(corpus);
-  
+
   while (index < shortestSample.length) {
-      const char = shortestSample[index];
-      if (corpus.every((sample) => sample[index] === char)) {
-          staticPrefix += char;
-          index++;
-          
-          // If we're inside a tag, continue until we find the closing '>'
-          if (char === '<') {
-              while (index < shortestSample.length && shortestSample[index] !== '>') {
-                  if (corpus.every((sample) => sample[index] === shortestSample[index])) {
-                      staticPrefix += shortestSample[index];
-                      index++;
-                  } else {
-                      return staticPrefix.substring(0, staticPrefix.lastIndexOf('<'));
-                  }
-              }
-              if (index < shortestSample.length && corpus.every((sample) => sample[index] === '>')) {
-                  staticPrefix += '>';
-                  index++;
-              } else {
-                  return staticPrefix.substring(0, staticPrefix.lastIndexOf('<'));
-              }
+    const char = shortestSample[index];
+    if (corpus.every((sample) => sample[index] === char)) {
+      staticPrefix += char;
+      index++;
+
+      // If we're inside a tag, continue until we find the closing '>'
+      if (char === "<") {
+        while (index < shortestSample.length && shortestSample[index] !== ">") {
+          if (
+            corpus.every((sample) => sample[index] === shortestSample[index])
+          ) {
+            staticPrefix += shortestSample[index];
+            index++;
+          } else {
+            return staticPrefix.substring(0, staticPrefix.lastIndexOf("<"));
           }
-      } else {
-          break;
+        }
+        if (
+          index < shortestSample.length &&
+          corpus.every((sample) => sample[index] === ">")
+        ) {
+          staticPrefix += ">";
+          index++;
+        } else {
+          return staticPrefix.substring(0, staticPrefix.lastIndexOf("<"));
+        }
       }
+    } else {
+      break;
+    }
   }
   return staticPrefix;
 }
 
 /**
-* Returns the longest postfix that is the same in all strings, respecting HTML tag boundaries
-* @param corpus
-* @returns
-*/
+ * Returns the longest postfix that is the same in all strings, respecting HTML tag boundaries
+ * @param corpus
+ * @returns
+ */
 function findStaticHTMLPostfix(corpus: TextCorpus): string {
   if (corpus.length === 0) return "";
   let staticPostfix = "";
   let index = 0;
   const shortestSample = shortestString(corpus);
-  
+
   while (index < shortestSample.length) {
-      const char = shortestSample[shortestSample.length - index - 1];
-      if (corpus.every((sample) => sample[sample.length - index - 1] === char)) {
-          staticPostfix = char + staticPostfix;
-          index++;
-          
-          // If we're inside a tag, continue until we find the opening '<'
-          if (char === '>') {
-              while (index < shortestSample.length && shortestSample[shortestSample.length - index - 1] !== '<') {
-                  if (corpus.every((sample) => sample[sample.length - index - 1] === shortestSample[shortestSample.length - index - 1])) {
-                      staticPostfix = shortestSample[shortestSample.length - index - 1] + staticPostfix;
-                      index++;
-                  } else {
-                      return staticPostfix.substring(staticPostfix.indexOf('>') + 1);
-                  }
-              }
-              if (index < shortestSample.length && corpus.every((sample) => sample[sample.length - index - 1] === '<')) {
-                  staticPostfix = '<' + staticPostfix;
-                  index++;
-              } else {
-                  return staticPostfix.substring(staticPostfix.indexOf('>') + 1);
-              }
+    const char = shortestSample[shortestSample.length - index - 1];
+    if (corpus.every((sample) => sample[sample.length - index - 1] === char)) {
+      staticPostfix = char + staticPostfix;
+      index++;
+
+      // If we're inside a tag, continue until we find the opening '<'
+      if (char === ">") {
+        while (
+          index < shortestSample.length &&
+          shortestSample[shortestSample.length - index - 1] !== "<"
+        ) {
+          if (
+            corpus.every(
+              (sample) =>
+                sample[sample.length - index - 1] ===
+                shortestSample[shortestSample.length - index - 1]
+            )
+          ) {
+            staticPostfix =
+              shortestSample[shortestSample.length - index - 1] + staticPostfix;
+            index++;
+          } else {
+            return staticPostfix.substring(staticPostfix.indexOf(">") + 1);
           }
-      } else {
-          break;
+        }
+        if (
+          index < shortestSample.length &&
+          corpus.every((sample) => sample[sample.length - index - 1] === "<")
+        ) {
+          staticPostfix = "<" + staticPostfix;
+          index++;
+        } else {
+          return staticPostfix.substring(staticPostfix.indexOf(">") + 1);
+        }
       }
+    } else {
+      break;
+    }
   }
   return staticPostfix;
 }

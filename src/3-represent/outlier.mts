@@ -1,3 +1,7 @@
+// Global
+import type { CorpusFrequency, CorpusMaps, Outlier, VectorCorpus } from "../interfaces.mts";
+import { OUTLIER_DEINCREMENT, OUTLIER_ERROR_MARGIN, OUTLIER_MAX_TRESHOLD, OUTLIER_MIN_TRESHOLD, OUTLIER_SAMPLES } from "../parameters.mts";
+
 // Utility
 import type { Vector } from "../utility/types.mts";
 import { selectRandomSample } from "../utility/util.mts";
@@ -6,10 +10,7 @@ import { selectRandomSample } from "../utility/util.mts";
 import {
   applyStaticThreshold,
   isStaticToken,
-  type CorpusFrequency,
-  type VectorizedCorpus,
-} from "./vector.mts";
- 
+} from "./vector.mts"; 
 
 /**
  * Detects outliers in a corpus by analyzing the frequency of the tokens, not taking into account position
@@ -19,27 +20,23 @@ import {
  * @returns
  */
 export function outlierDetection(
-    corpus: VectorizedCorpus,
+    corpus: VectorCorpus,
+    maps: CorpusMaps,
     freq: CorpusFrequency
-  ) {
-    const SAMPLES = 20;
-    const DEINCREMENT = 0.001;
-    const MAX_TRESHOLD = 1;
-    const MIN_TRESHOLD = 0.95;
-    const ERROR_MARGIN = 0.005;
-  
+  ): Outlier {
+
     // pick a random sample
-    let samples = selectRandomSample(corpus.vectorized, SAMPLES);
+    let samples = selectRandomSample(corpus, OUTLIER_SAMPLES);
     let stablePoints: number[] = [];
   
     for (const sample of samples) {
   
       const lengths: [number, number][] = [];
-      let threshold = MAX_TRESHOLD;
+      let threshold = OUTLIER_MAX_TRESHOLD;
       
-      while (threshold > MIN_TRESHOLD) {
+      while (threshold > OUTLIER_MIN_TRESHOLD) {
         // apply static threshold and filter out static tokens
-        const vector = applyStaticThreshold(sample, corpus, freq, threshold).filter((t) => !isStaticToken(t));
+        const vector = applyStaticThreshold(sample, maps, freq, threshold).filter((t) => !isStaticToken(t));
         
         // get the length and add it to the array
         lengths.push([vector.length, threshold]);
@@ -56,11 +53,11 @@ export function outlierDetection(
         }
   
         // decrement the threshold
-        threshold = threshold - DEINCREMENT;
+        threshold = threshold - OUTLIER_DEINCREMENT;
       }
     }
   
-    console.log("stable points", stablePoints);
+    console.log("Stable Points:", stablePoints);
   
     if (stablePoints.length !== samples.length) {
       throw new Error("Stable points not found for all random samples");
@@ -69,7 +66,7 @@ export function outlierDetection(
     // find the average stable point
     const meanStablePoint =
       stablePoints.reduce((a, b) => a + b) / stablePoints.length;
-    console.log("mean stable point", meanStablePoint);
+    console.log("Mean Stable Point:", meanStablePoint);
   
     // exclude samples which had a high stable point, add a little margin for real number math
     samples = samples.filter((_, i) => stablePoints[i] <= meanStablePoint * 1.01);
@@ -79,11 +76,11 @@ export function outlierDetection(
     for (const sample of samples) {
       const stableVec = applyStaticThreshold(
         sample,
-        corpus,
+        maps,
         freq,
         meanStablePoint
       );
-      const unstableVec = applyStaticThreshold(sample, corpus, freq, MAX_TRESHOLD);
+      const unstableVec = applyStaticThreshold(sample, maps, freq, OUTLIER_MAX_TRESHOLD);
       const diff = unstableVec.filter((v) => !stableVec.includes(v));
       diff.map((v) => diffSet.add(v));
     }
@@ -92,7 +89,7 @@ export function outlierDetection(
   
     // find the outliers by checking which samples do not contain the diff tokens
     const outliers: [Vector, number][] = [];
-    for (const sample of corpus.vectorized) {
+    for (const sample of corpus) {
       const diffs: Vector = [];
       diffSet.forEach((diff) => {
         if (!sample.includes(diff)) diffs.push(diff);
@@ -103,18 +100,18 @@ export function outlierDetection(
     // sort the outliers by the number of diff tokens they lack
     outliers.sort((a, b) => a[1] - b[1]);
   
-    const outlierPercentage = outliers.length / corpus.vectorized.length;
+    const outlierPercentage = outliers.length / corpus.length;
     const expectedOutlierPercentage = 1 - meanStablePoint;
   
     console.log("Outliers Found:", outliers.length, outlierPercentage);
   
     console.log(
       "Expected Outliers:",
-      Math.floor(corpus.vectorized.length * expectedOutlierPercentage),
+      Math.floor(corpus.length * expectedOutlierPercentage),
       expectedOutlierPercentage
     );
   
-    if (outlierPercentage - expectedOutlierPercentage > ERROR_MARGIN) {
+    if (outlierPercentage - expectedOutlierPercentage > OUTLIER_ERROR_MARGIN) {
       console.log("Warning: Outlier Percentage is outside of expected range");
     }
   

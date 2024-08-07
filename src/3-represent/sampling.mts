@@ -14,21 +14,21 @@ import { vectorDistance, vectorizeCorpus } from "./vector.mts";
  * @returns 
  */
 export function selectHTMLSample(textCorpus: TextCorpus, sampleSize: number): TextCorpus {
-  const corpus = vectorizeCorpus(textCorpus);
+  const [_, vectorCorpus] = vectorizeCorpus(textCorpus);
 
   if (sampleSize > textCorpus.length) {
     throw new Error("Sample size must be less than the corpus size");
   }
 
-  const samples = [corpus.vectorized[0]];
+  const samples = [vectorCorpus[0]];
   const samplesHTML = [textCorpus[0]];
   while (samples.length < sampleSize) {
       let maxMinDistance = -1;
       let farthestSample: Vector | null = null
       let farthestSampleHTML: string | null = null
-      for (let index = 0; index < corpus.vectorized.length; index++) {
-        const vector = corpus.vectorized[index];
-        const html = corpus[index];
+      for (let index = 0; index < vectorCorpus.length; index++) {
+        const vector = vectorCorpus[index];
+        const html = textCorpus[index];
           if (!samples.includes(vector)) {
               const minDistance = Math.min(...samples.map(s => vectorDistance(s, vector)));
               if (minDistance > maxMinDistance) {

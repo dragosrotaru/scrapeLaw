@@ -1,36 +1,36 @@
-
-// Utility
-import type { Vector } from "../utility/types.mts";
-import { selectRandomSample } from "../utility/util.mts";
-import { printColoredStrings } from "../utility/print.tsx";
-
-// Prior Step
-import { prepare } from "../2-prepare/index.mts";
+// Global
+import type { Output, PreparedCorpus, Representation } from "../interfaces.mts";
 
 // This Step
 import { outlierDetection } from "./outlier.mts";
-import { applyStaticThreshold, compressStaticComponents, dedupSequences, generateFrequencyMaps, generateFrequencyVector, isStructuralToken, vectorizeCorpus, vectorToText } from "./vector.mts";
+import {
+  applyStaticThreshold,
+  compressStaticComponents,
+  dedupSequences,
+  generateFrequencyMaps,
+  generateFrequencyVector,
+  isStructuralToken,
+  vectorizeCorpus,
+} from "./vector.mts";
 
-export function represent() {
-    // prior step
-    const { analysis, corpus: textCorpus } = prepare();
+export function represent(preparation: PreparedCorpus): Representation {
+  // prior step
+  const { corpus } = preparation;
 
-    // generate vectorized corpus with maps
-    console.log("Vectorizing Corpus \n");
-    const corpus = vectorizeCorpus(textCorpus);
-    const freq = generateFrequencyMaps(corpus);
+  // generate vectorized corpus with maps
+  const [maps, vectorized ]= vectorizeCorpus(corpus);
+  const freq = generateFrequencyMaps(vectorized, maps);
 
-    // outlier detection
-    console.log("\n Outlier Detection \n");
-    const outlier = outlierDetection(corpus, freq);
+  // outlier detection
+  const outlier = outlierDetection(vectorized, maps, freq);
 
-    // pick a sample
-    const sample = selectRandomSample(corpus.vectorized, 1)[0];
-
+  // pick a sample
+  const output: Output[] = [];
+  for (const vector of vectorized) {
     // apply static threshold
     const zeroedOut = applyStaticThreshold(
-      sample,
-      corpus,
+      vector,
+      maps,
       freq,
       outlier.meanStablePoint
     );
@@ -39,32 +39,16 @@ export function represent() {
     const compressed = compressStaticComponents(zeroedOut);
 
     // filter out strutural tokens
-    const filtered = compressed.filter((v) => !isStructuralToken(v));
+    const content = compressed.filter((v) => !isStructuralToken(v));
 
     // deduplicate sequences
-    const deduplicated = dedupSequences(filtered);
+    const deduplicated = dedupSequences(content);
 
-    // print sample
-    const sampleTokens = vectorToText(deduplicated, corpus);
-    const sampleFreq = generateFrequencyVector(deduplicated, corpus, freq);
+    // frequency vector
+    const frequency = generateFrequencyVector(deduplicated, maps, freq);
 
-    // filter out textual tokens
-    const text: string[] = [];
-    const freqVec: Vector = [];
-    for (let index = 0; index < sampleTokens.length; index++) {
-      const textComp = sampleTokens[index];
-      const freqComp = sampleFreq[index];
+    output.push([deduplicated, frequency]);
+  }
 
-      // filter out URLs
-      if (textComp.startsWith("http")) continue;
-      if (textComp.startsWith("javascript:")) continue
-      if (textComp.startsWith("mailto:")) continue
-
-      text.push(textComp);
-      freqVec.push(freqComp);
-    }
-
-    printColoredStrings(text, freqVec);
-
-    return text;
+  return { preparation, vectorized, maps, freq, outlier, output };
 }
