@@ -2,12 +2,19 @@
 import React from "react";
 import { render, Text } from "ink";
 
+// Global
+import type { CorpusMaps } from "../interfaces.mts";
+import { PRINT_LENGTH } from "../parameters.mts";
+
+// Utility
+import type { Vector } from "../utility/types.mts";
+
+import { vectorToText } from "./vector.mts";
 /**
  * Pretty Prints a sample to the console
  * @param sample
  */
-export function printSample(sample: string) {
-  const PRINT_LENGTH = 256;
+export function printSample(sample: string): void {
   console.log(JSON.stringify(sample.slice(0, PRINT_LENGTH)));
   console.log(`(first ${PRINT_LENGTH} characters shown) \n`);
 }
@@ -34,6 +41,7 @@ function ColoredStrings(props: { strings: string[], intensities: number[] }) {
   );
 }
 
-export function printColoredStrings(strings: string[], intensities: number[]) {
+export function printVectorsWithFrequency(vector: Vector, intensities: Vector, maps: CorpusMaps) {
+  const strings = vectorToText(vector, maps);
   render(<ColoredStrings strings={strings} intensities={intensities} />);
 }

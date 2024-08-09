@@ -2,6 +2,7 @@
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "cheerio": "^1.0.0-rc.12",
+    "commander": "^12.1.0",
     "date-fns": "^3.6.0",
     "gpt3-tokenizer": "^1.1.5",
     "html-entities": "^2.5.2",

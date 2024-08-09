@@ -2,26 +2,23 @@
 import * as validate from "html-validate/node";
 
 // Global
-import { CORPUS_PATH } from "../files.mts";
+import type { CorpusFiles } from "../interfaces.mts";
 
-// Utility
-import { readTextFilesDir } from "../utility/io.mts";
 
 // https://validator.w3.org/nu
 
-async function validateHTML() {
+async function validateHTML(files: CorpusFiles) {
   // todo pick ruleset
   const htmlvalidate = new validate.HtmlValidate({ extends: ["html-validate:recommended"] });
   // todo standardize the format of the corpus files so we can merge reports
-  const originalCorpus = readTextFilesDir(CORPUS_PATH);
 
   const invalid: {
     sample: { id: string; data: string };
     report: validate.Report;
   }[] = [];
-  for (let i = 0; i < originalCorpus.length; i++) {
-    console.log("validating", i, "of", originalCorpus.length);
-    const sample = originalCorpus[i];
+  for (let i = 0; i < files.length; i++) {
+    console.log("validating", i, "of", files.length);
+    const sample = files[i];
     const report = await htmlvalidate.validateString(sample.data);
     if (!report.valid) invalid.push({ sample, report });
   }
@@ -39,5 +36,3 @@ async function validateHTML() {
   console.log(invalid[0].report.errorCount);
   console.log(invalid[0].report.warningCount);
 }
-
-validateHTML();

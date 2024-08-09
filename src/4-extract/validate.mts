@@ -1,45 +1,20 @@
-// Data Specific
-import { schema as schem } from "../data/canada/manitoba/schema.mts";
+// 3rd Party
+import { ZodError, ZodSchema } from "zod";
 
 // Global
-import { CORPUS_PATH } from "../files.mts";
-
-// Utility
-import { readTextFilesDir, readJSONFile, writeJSONFile } from "../utility/io.mts";
-import { htmlToText } from "../utility/validators.mts";
-
-/**
- * Regularize the dataset to nullable text fields and Sample format
- */
-function regularize() {
-    const dataset = readJSONFile(DATASET_FILE) as Datum[];
-    // const corpus = readJSON(CORPUS_FILE).results as string[];
-    const corpus = readTextFilesDir(CORPUS_PATH);
-    const regular = corpus.map((input, index) => {
-        const output = dataset[index];
-        for (const [field, value] of Object.entries(output)) {
-            output[field] = htmlToText(value);
-        }
-        return { input: input.data, output };
-    });
-    writeJSONFile(REGULAR_FILE, regular);
-    console.log("regularized", regular.length);
-}
+import { Sample } from "../interfaces.mts";
 
 /**
  * Run the unit tests
  */
-function unit() {
-    const samples = readJSONFile(SAMPLE_FILE) as Sample[];
-    const regular = readJSONFile(REGULAR_FILE) as Sample[];
-    console.log("sample count", samples.length);
-    for (const sample of samples) {
+export function unit(examples: Sample[], dataset: Sample[]) {
+    console.log("sample count", examples.length);
+    for (const example of examples) {
         // find the output of the regularized dataset
-        const index = regular.findIndex((item) => item.input === sample.input);
-        const { output } = regular[index];
+        const output = dataset.find((d) => d.id === example.id)?.data;
 
         // iterate over all fields in the output
-        for (const [field, expected] of Object.entries(sample.output)) {
+        for (const [field, expected] of Object.entries(example.data)) {
             const actual = output[field];
 
             // check if the field exists
@@ -67,7 +42,7 @@ function unit() {
 
         // check for extra fields
         for (const field of Object.keys(output)) {
-            if (!Object.keys(sample.output).includes(field)) {
+            if (!Object.keys(example.data).includes(field)) {
                 console.log("extra field", field);
             }
         }
@@ -78,16 +53,14 @@ function unit() {
 /**
  * Validate the regularized dataset against the schema
  */
-function schema() {
-    const regular = readJSONFile(REGULAR_FILE) as Sample[];
-    const errors: any[] = [];
-    for (const sample of regular) {
-        const { output } = sample;
-        const parsed = schem.safeParse(output);
+export function schema(site: string, dataset: Sample[], schema: ZodSchema): { sample: Sample, errors: ZodError}[] {
+    const errors: { sample: Sample, errors: ZodError}[] = [];
+    for (const sample of dataset) {
+        const parsed = schema.safeParse(sample.data);
         if (!parsed.success) {
             errors.push({ sample, errors: parsed.error });
         }
     }
     console.log("errors found:", errors.length);
-    writeJSONFile(SCHEMA_ERRORS, errors);
+    return errors;
 }

@@ -167,20 +167,20 @@ export function parseTag(token: string): Tag {
 
   const [, name, attributeString] = matches;
 
-  function parseAttributes(attributeString) {
+  function parseAttributes(attributeString: string) {
     const attributes: { name: string; value?: string }[] = [];
-    const regex = /(?:\s|^)(\w+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
-    let match;
-
+    const regex =
+      /(?:\s|^)([\w:.-]+)(?:\s*=\s*(?:"([^"]*)"|'([^']*)'|([^\s>]+)))?/g;
+    let match: RegExpExecArray | null = null;
     while ((match = regex.exec(attributeString)) !== null) {
-      const [, name, doubleQuotedValue, singleQuotedValue, unquotedValue] =
+      const [_, name, doubleQuotedValue, singleQuotedValue, unquotedValue] =
         match;
-      const value =
-        doubleQuotedValue || singleQuotedValue || unquotedValue || "";
-      attributes[name] = value;
+      const value = doubleQuotedValue || singleQuotedValue || unquotedValue;
+      if (name.startsWith("on")) continue; // ignore event handlers containing javascript
+      if (value.startsWith("javascript:")) continue; // ignore hrefs containing javascript
       attributes.push({ name, value });
     }
-
+    console.log(attributes);
     return attributes;
   }
 

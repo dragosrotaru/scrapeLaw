@@ -1,6 +1,6 @@
 
 export type NullableString = string | null;
 
-export type JSONType = any;
+export type JASON = any;
 
 export type Vector = number[];

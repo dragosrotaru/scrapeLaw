@@ -46,11 +46,12 @@ Deno.test("tagToToken should convert a tag object to a IR token", () => {
 });
 
 Deno.test("parser should parse HTML into IR tokens", () => {
-  const input = `<div class="test">Hello <span>world</span></div>`;
+  const input = `<div class="test">Hello &<span>world</span></div>`;
   const expected = [
     `<div class >`,
     "test",
     "Hello",
+    "&",
     `<span>`,
     "world",
     `</span>`,

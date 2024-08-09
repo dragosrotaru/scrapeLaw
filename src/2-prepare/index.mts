@@ -1,9 +1,8 @@
 // Global
-import type { Analysis, PreparedCorpus } from "../interfaces.mts";
-import { SAMPLE_LIMIT } from "../parameters.mts";
+import { REMOVE_HEAD, SAMPLE_LIMIT } from "../parameters.mts";
+import type { Analysis, CorpusFiles, PreparedCorpus } from "../interfaces.mts";
 
 // Util
-import { readTextFilesDir } from "../utility/io.mts";
 import {
   averageStringLength,
   longestString,
@@ -12,7 +11,7 @@ import {
 } from "../utility/util.mts";
 
 // This Step
-import { normHTMLExtract, normHTMLParse } from "./html.mts";
+import { normHTMLWhiteSpace, normHTMLParse } from "./html.mts";
 import { isolateCorpus } from "./isolate.mts";
 
 /**
@@ -31,8 +30,10 @@ export function printStats(stats: Analysis["stats"]) {
 }
 
 export function prepare(
-  files: ReturnType<typeof readTextFilesDir>,
-  sampleLimit: number = SAMPLE_LIMIT
+  files: CorpusFiles,
+  sampleLimit: number = SAMPLE_LIMIT,
+  removeHead: boolean = REMOVE_HEAD,
+  operation?: (fileData: string) => string,
 ): PreparedCorpus {
 
   console.log("Corpus Size: ", files.length);
@@ -49,22 +50,19 @@ export function prepare(
   // keep only data
   let fileData = files.map((f) => f.data);
 
-  // todo alberta specific
-  fileData = fileData.map((sample) =>
-    sample.replace(
-      `<a href =https://www.lawsociety.ab.ca/public/lawyer-referral/report-request/ = ”subject text”= Message">`,
-      `<a href="https://www.lawsociety.ab.ca/public/lawyer-referral/report-request/?subject=text&message=Message">`
-    )
-  );
+  // source-specific operations
+  if (operation) {
+    fileData = fileData.map(operation);
+  }
 
   // normalize whitespace
-  const normedCorpus = fileData.map(normHTMLExtract);
-
-  // isolate the corpus
-  const { isolated, postfix, prefix } = isolateCorpus(normedCorpus);
+  let normedCorpus = fileData.map(normHTMLWhiteSpace);
 
   // normalize for parsing
-  const corpus = isolated.map(normHTMLParse);
+  normedCorpus = normedCorpus.map(sample => normHTMLParse(sample, removeHead));
+
+  // isolate the corpus
+  const { isolated: corpus, postfix, prefix } = isolateCorpus(normedCorpus);
 
   // find the longest remaining string
   const longestSample = longestString(corpus);
@@ -92,3 +90,14 @@ export function prepare(
 
   return { analysis, corpus };
 }
+
+/* 
+  // alberta specific
+  fileData = fileData.map((sample) =>
+    sample.replace(
+      `<a href =https://www.lawsociety.ab.ca/public/lawyer-referral/report-request/ = ”subject text”= Message">`,
+      `<a href="https://www.lawsociety.ab.ca/public/lawyer-referral/report-request/?subject=text&message=Message">`
+    )
+  );
+
+*/

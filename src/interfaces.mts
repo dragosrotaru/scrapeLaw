@@ -1,4 +1,9 @@
-import { Vector } from "./utility/types.mts";
+import { readTextFilesDir } from "./utility/io.mts";
+import { JASON, Vector } from "./utility/types.mts";
+
+// Scrape
+
+export type CorpusFiles = ReturnType<typeof readTextFilesDir>;
 
 // Prepare
 
@@ -56,4 +61,9 @@ export interface Representation {
   freq: CorpusFrequency;
   output: Output[];
   outlier: Outlier;
+}
+
+export interface Sample {
+  id: string;
+  data: JASON;
 }

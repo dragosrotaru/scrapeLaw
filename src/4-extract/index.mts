@@ -1,8 +1,10 @@
 // Global
-import { Representation } from "../interfaces.mts";
+import type { Representation } from "../interfaces.mts";
 
 // Utility
 import { extractJSON } from "../utility/gpt.mts";
+
+// Previous Step
 import { vectorToText } from "../3-represent/vector.mts";
 
 async function textToJSON(text: string[]): Promise<any> {
@@ -21,7 +23,6 @@ export function filterOutByText(tokens: string[]): string[] {
     const textComp = tokens[index];
     // filter out URLs
     if (textComp.startsWith("http")) continue;
-    if (textComp.startsWith("javascript:")) continue;
     if (textComp.startsWith("mailto:")) continue;
 
     text.push(textComp);
