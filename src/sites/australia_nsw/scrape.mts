@@ -1,5 +1,5 @@
 import { printProgress } from "../../1-scrape/print.mts";
-import { ROOT_DATA_PATH } from "../../parameters.mts";
+import { dataPath } from "../../1-scrape/scrape.mts";
 import { fetchSaveJSON, fileExists, readJSONFile } from "../../utility/io.mts";
 import { JASON } from "../../utility/types.mts";
 
@@ -11,7 +11,8 @@ Endpoints:
 - https://az-ae-app-fal-prod-webservice.azurewebsites.net/api/mediator/7133
 */
 
-export const DATA_PATH = ROOT_DATA_PATH + "australia_nsw/";
+export const SITE = "australia_nsw";
+export const DATA_PATH = dataPath(SITE);
 export const BASE_URL = "https://az-ae-app-fal-prod-webservice.azurewebsites.net/api/";
 type Endpoint = "lawyer" | "practice" | "mediator";
 
@@ -34,7 +35,7 @@ function formURL(endpoint: Endpoint): string {
     return BASE_URL + endpoint + "/";
 }
 
-export async function getIndex(endpoint: Endpoint): Promise<Index> {
+export async function index(endpoint: Endpoint): Promise<Index> {
     const index = await fetchSaveJSON(indexFilePath(endpoint), formURL(endpoint), {
         method: "POST",
         headers: {
@@ -51,7 +52,7 @@ export async function getIndex(endpoint: Endpoint): Promise<Index> {
     return index;
 }
 
-export async function getDetail(endpoint: Endpoint) {
+export async function detail(endpoint: Endpoint) {
     // Get Index
     const indexFileName = indexFilePath(endpoint);
     const index = readJSONFile(indexFileName);

@@ -1,23 +1,24 @@
-import { fileExists, readJSONFile, writeJSONFile } from "../utility/io.mts";
+import { ROOT_DATA_PATH } from "../parameters.mts";
+import { fetchSaveText, fileExists, readJSONFile, writeJSONFile } from "../utility/io.mts";
 import { printProgress } from "./print.mts";
 
-const CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
+export const CHARACTERS = "abcdefghijklmnopqrstuvwxyz";
 
-interface CharacterIndex {
+export interface CharacterIndex {
     character: string;
-    results: string[];
+    ids: string[];
 }
 
-interface PageIndex {
+export interface PageIndex {
     page: number;
-    results: string[];
+    ids: string[];
 }
 
 export async function indexByCharacter(indexFilePath: string, operation: (character: string) => Promise<string[]>): Promise<void> {
 
     let index: CharacterIndex = {
         character: CHARACTERS[0],
-        results: [],
+        ids: [],
     }
 
     if (fileExists(indexFilePath)) {
@@ -32,17 +33,17 @@ export async function indexByCharacter(indexFilePath: string, operation: (charac
         printProgress(i, CHARACTERS.length, index.character);
 
         // Extract data
-        index.results.push(...await operation(index.character));
+        index.ids.push(...await operation(index.character));
 
         // Save data
         writeJSONFile(indexFilePath, index);
     }
 }
 
-export async function scrapeByPage(indexFilePath: string, operation: (page: number) => Promise<string[]>): Promise<void> {
+export async function indexByPage(indexFilePath: string, operation: (page: number) => Promise<string[]>): Promise<void> {
     let index: PageIndex = {
         page: 0,
-        results: [],
+        ids: [],
     }
 
     if (fileExists(indexFilePath)) {
@@ -56,12 +57,38 @@ export async function scrapeByPage(indexFilePath: string, operation: (page: numb
         const results = await operation(index.page);
 
         // Save data
-        index.results.push(...results);
+        index.ids.push(...results);
         writeJSONFile(indexFilePath, index);
         
         if (results.length === 0) break;
 
         index.page++;
 
+    }
+}
+
+export const dataPath = (site: string) => ROOT_DATA_PATH + site + "/";
+
+export const detailFilePath = (site: string) => (id: string) => dataPath(site) + "detail/" + id + ".html";
+export const indexFilePath = (site: string) => dataPath(site) + "index.json";
+
+
+export async function getDetail(site: string, detailUrl: (id: string) => string) {
+    const { ids } = readJSONFile(indexFilePath(site));
+    const count = ids.length;
+    
+    for (let i = 0; i < count; i++) {
+        const id = ids[i];
+        const fileName = detailFilePath(site)(id);
+        
+        printProgress(i, count, id);
+        
+        if (fileExists(fileName)) {
+            console.log('skipping', id);
+            continue;
+        }
+        
+        await fetchSaveText(fileName, detailUrl(id));
+        await new Promise((resolve) => setTimeout(resolve, 50));
     }
 }

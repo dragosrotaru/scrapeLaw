@@ -81,3 +81,31 @@ export async function extractJSON(prompt: string): Promise<any> {
   const json = JSON.parse(extractFirstCodeBlock(response, ["json"]).code);
   return json;
 }
+
+/**
+ * Uses OpenAI API to solve simple captcha images
+ * @param {*} image
+ */
+export async function captchaSolver(base64Image: string): Promise<NullableString> {
+  const response = await openai.chat.completions.create({
+    model: "gpt-4-turbo-2024-04-09",
+    messages: [
+      {
+        role: "user",
+        content: [
+          {
+            type: "text",
+            text: "what alphanumeric characters do you see? return nothing other than the characters.",
+          },
+          {
+            type: "image_url",
+            image_url: {
+              url: `data:image/jpeg;base64,${base64Image}`,
+            },
+          },
+        ],
+      },
+    ],
+  });
+  return response.choices[0].message.content?.replace(/[^a-zA-Z0-9]/g, "") || null;
+}

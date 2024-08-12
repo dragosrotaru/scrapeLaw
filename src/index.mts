@@ -21,3 +21,25 @@ scrapeCMD
         console.log("scraping", site);
 
     });
+
+prepareCMD
+    .addOption(siteOption)
+    .action(async ({ site }) => {
+        console.log("preparing", site);
+
+    });
+
+representCMD
+    .addOption(siteOption)
+    .action(async ({ site }) => {
+        console.log("representing", site);
+
+    });
+
+extractCMD
+    .addOption(siteOption)
+    .action(async ({ site }) => {
+        console.log("extracting", site);
+    });
+
+program.parse();

@@ -1,6 +1,6 @@
 // Global
 import { printProgress } from "../../1-scrape/print.mts";
-import { ROOT_DATA_PATH } from "../../parameters.mts";
+import { dataPath, indexFilePath } from "../../1-scrape/scrape.mts";
 
 // Utility
 import { fetchSaveJSON, readJSONFile } from "../../utility/io.mts";
@@ -17,12 +17,10 @@ const headers = {
     "Cookie": "JSESSIONID=REDACTED; XSRF-TOKEN=REDACTED",
 };
 
-export const DATA_PATH = ROOT_DATA_PATH + "australia_nsw/";
-export const INDEX_FILE_PATH = DATA_PATH + "australia_queensland_barrister/index.json";
 
-function detailFilePath(id: string): string {
-    return DATA_PATH + `detail/${id}.json`;
-}
+const SITE = "australia_queensland_barrister";
+const INDEX_FILE_PATH = indexFilePath(SITE);
+const detailFilePath = (id: string): string => dataPath(SITE) + `detail/${id}.json`;
 
 export async function getIndex() {
     return fetchSaveJSON(INDEX_FILE_PATH, INDEX_URL, {
