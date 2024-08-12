@@ -1,12 +1,10 @@
-import fs from "fs";
 import { fetchSaveText, fileExists, readJSONFile, writeJSONFile } from "../../utility/io.mts";
 import { printProgress } from "../../1-scrape/print.mts";
-import { ROOT_DATA_PATH } from "../../parameters.mts";
-import { detailFilePath } from "../../1-scrape/scrape.mts";
+import { detailFilePath, indexFilePath, indexHTMLFilePath } from "../../1-scrape/scrape.mts";
 
-const DATA_PATH = ROOT_DATA_PATH + "canada_newfoundland/";
-const INDEX_FILE_PATH = DATA_PATH + "index.json";
-const INDEX_HTML_FILE_PATH = DATA_PATH + "index.html";
+export const SITE = "canada_newfoundland";
+const INDEX_FILE_PATH = indexFilePath(SITE);
+const INDEX_HTML_FILE_PATH = indexHTMLFilePath(SITE);
 
 const BASE_URL = "https://lsnl.memberpro.net/main/body.cfm";
 const INDEX_URL = BASE_URL + "?menu=directory&submenu=directoryPractisingMember";
@@ -14,7 +12,7 @@ const DETAIL_URL = INDEX_URL;
 
 // same system as alberta
 
-export async function getIndex() {
+export async function index() {
     /*
     takes a while to receive the response but it does give the entire database
     in one go if you include a single space in the person name field
@@ -38,7 +36,7 @@ export async function getIndex() {
     writeJSONFile(INDEX_FILE_PATH, index);
 }
 
-export async function getDetail() {
+export async function detail() {
     const index = readJSONFile(INDEX_FILE_PATH);
     const count = index.length;
 
@@ -48,7 +46,7 @@ export async function getDetail() {
         const [record_id, table_id] = index[i]; // table id is the actual ID, record is just incremental
         printProgress(i, count, table_id);
 
-        const fileName = detailFilePath(DATA_PATH)(table_id);
+        const fileName = detailFilePath(SITE)("html")(table_id);
 
         // check if file exists
         if (fileExists(fileName)) {

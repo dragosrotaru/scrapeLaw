@@ -1,5 +1,5 @@
 // Global
-import { ROOT_DATA_PATH } from "../../parameters.mts";
+import { indexFilePath } from "../../1-scrape/scrape.mts";
 
 // Utility
 import { readJSONFile, writeJSONFile } from "../../utility/io.mts";
@@ -12,8 +12,8 @@ import { readJSONFile, writeJSONFile } from "../../utility/io.mts";
 // https://www.lst.org.au/lawyer-details/?fld47=a069q000000Zbi0
 // same as index, better to capture second link
 
-const DATA_PATH = ROOT_DATA_PATH + "australia_tasmania/";
-const INDEX_FILE_PATH = DATA_PATH + "index.json";
+const SITE = "australia_tasmania";
+const INDEX_FILE_PATH = indexFilePath(SITE);
 
 function processFirms() {
     const { data } = readJSONFile(INDEX_FILE_PATH);

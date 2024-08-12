@@ -11,7 +11,7 @@ const detailUrl = (id: string) => DETAIL_URL + id + "/";
 
 // about 16,401 practicing certificate lawyers, but the results max out at 10000.
 
-export async function getIndex() {
+export async function index() {
     let index = {
         character: "a",
         page: 2,
@@ -59,6 +59,6 @@ export async function getIndex() {
     }
 }
 
-export async function getDetails() {
+export async function detail() {
     return getDetail(SITE, detailUrl);
 }

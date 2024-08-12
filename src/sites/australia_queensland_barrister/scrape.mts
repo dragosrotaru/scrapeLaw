@@ -1,6 +1,6 @@
 // Global
 import { printProgress } from "../../1-scrape/print.mts";
-import { dataPath, indexFilePath } from "../../1-scrape/scrape.mts";
+import { detailFilePath, indexFilePath } from "../../1-scrape/scrape.mts";
 
 // Utility
 import { fetchSaveJSON, readJSONFile } from "../../utility/io.mts";
@@ -17,12 +17,10 @@ const headers = {
     "Cookie": "JSESSIONID=REDACTED; XSRF-TOKEN=REDACTED",
 };
 
-
 const SITE = "australia_queensland_barrister";
 const INDEX_FILE_PATH = indexFilePath(SITE);
-const detailFilePath = (id: string): string => dataPath(SITE) + `detail/${id}.json`;
 
-export async function getIndex() {
+export async function index() {
     return fetchSaveJSON(INDEX_FILE_PATH, INDEX_URL, {
         method: "POST",
         headers,
@@ -42,13 +40,13 @@ export async function getIndex() {
     });
   }
 
-export async function getDetail() {
+export async function detail() {
     const index = readJSONFile(INDEX_FILE_PATH);
     const barristers = index.barristerList;
     const count = barristers.length;
     for (let i = 0; i < count; i++) {
         const { id } = barristers[i];
         printProgress(i, count, id);
-        fetchSaveJSON(DETAIL_URL + id, detailFilePath(id), { headers });
+        fetchSaveJSON(DETAIL_URL + id, detailFilePath(SITE)("json")(id), { headers });
     }
 }

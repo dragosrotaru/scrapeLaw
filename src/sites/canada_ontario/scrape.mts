@@ -1,12 +1,10 @@
-import fs from "fs";
 import { fetchJSON, fetchSaveText, fileExists, readJSONFile, writeJSONFile } from "../../utility/io.mts";
 import { JASON } from "../../utility/types.mts";
-import { ROOT_DATA_PATH } from "../../parameters.mts";
 import { printProgress } from "../../1-scrape/print.mts";
-import { detailFilePath } from "../../1-scrape/scrape.mts";
+import { detailFilePath, indexFilePath } from "../../1-scrape/scrape.mts";
 
-const DATA_PATH = ROOT_DATA_PATH + "canada_ontario/";
-const INDEX_FILE_PATH = DATA_PATH + "index.json";
+const SITE = "canada_ontario";
+const INDEX_FILE_PATH = indexFilePath(SITE);
 
 const API_KEY = "REDACTED_LSO_API_KEY";
 const INDEX_URL = "https://lawsocietyontario.search.windows.net/indexes/lsolpindexprd/docs?api-version=2017-11-11&$count=true&$top=1000&$skip=";
@@ -21,7 +19,7 @@ export async function api(url) {
     });
 }
 
-export async function getIndex() {
+export async function index() {
     const results: JASON[] = [];
     // get first page
     const data = await api(INDEX_URL + "0");
@@ -39,7 +37,7 @@ export async function getIndex() {
     return writeJSONFile(INDEX_FILE_PATH, results);
 }
 
-export async function getDetail(offset = 0) {
+export async function detail(offset = 0) {
     const data = readJSONFile(INDEX_FILE_PATH);
     const count = data.length;
 
@@ -47,7 +45,7 @@ export async function getDetail(offset = 0) {
         const item = data[i];
         const id = item.membernumber;
         printProgress(i, count, id);        
-        const fileName = detailFilePath(DATA_PATH)(id);
+        const fileName = detailFilePath(SITE)("html")(id);
         // check if file exists
         if (fileExists(fileName)) {
             console.log("exists, skipping ", id);

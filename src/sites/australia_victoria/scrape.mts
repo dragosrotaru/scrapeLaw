@@ -12,6 +12,7 @@ export async function index() {
     const index = fileExists(INDEX_FILE_PATH) ? readJSONFile(INDEX_FILE_PATH) : {
         start_rank: 0,
         results: [],
+        timestamp: new Date().toISOString(),
     };
 
     while (true) {
@@ -31,5 +32,3 @@ export async function index() {
         writeJSONFile(INDEX_FILE_PATH, index);
     }
 }
-
-index();

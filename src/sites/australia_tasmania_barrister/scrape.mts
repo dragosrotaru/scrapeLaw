@@ -1,38 +1,33 @@
 // Global
-import { printProgress } from "../../1-scrape/print.mts";
-import { ROOT_DATA_PATH } from "../../parameters.mts";
+import { getDetail, indexFilePath } from "../../1-scrape/scrape.mts";
 
 // Utility
-import { fetchSaveText, fetchText, readJSONFile, writeJSONFile } from "../../utility/io.mts";
+import {
+  fetchText,
+  writeJSONFile,
+} from "../../utility/io.mts";
 
-const INDEX_URL = "https://tasbar.com.au/barristers/?f_field=&f_region=&f_name=";
-const detailUrl = (id: string) => `https://tasbar.com.au/barrister/${id}`;
+const INDEX_URL =
+  "https://tasbar.com.au/barristers/?f_field=&f_region=&f_name=";
+const DETAIL_URL = "https://tasbar.com.au/barrister/";
+const detailUrl = (id: string) => DETAIL_URL + id;
 
-const DATA_PATH = ROOT_DATA_PATH + "australia_tasmania/";
-const INDEX_FILE_PATH = DATA_PATH + "index.json";
-const detailFilePath = (id: string) => `${DATA_PATH}detail/${id}.html`;
+const SITE = "australia_tasmania";
+const INDEX_FILE_PATH = indexFilePath(SITE);
 
 export async function getIndex() {
-    const html = await fetchText(INDEX_URL);
-    
-    // <a href="https://tasbar.com.au/barrister/albert-dinelli/" class="barrister__inner">
-    const regex = /<a href="([^"]+)" class="barrister__inner">/g;
-    const matches = [...html.matchAll(regex)];
-    
-    const barristerIds = matches
-        .map((match) => match[1])
-        .map(u => u.replace("https://tasbar.com.au/barrister/", ""))
-        .map(u => u.replace("/", ""));
+  const html = await fetchText(INDEX_URL);
+  // todo save html
 
-    writeJSONFile(INDEX_FILE_PATH, barristerIds);
+  // <a href="https://tasbar.com.au/barrister/albert-dinelli/" class="barrister__inner">
+  const regex = /<a href="([^"]+)" class="barrister__inner">/g;
+  const ids = [...html.matchAll(regex)].map((match) =>
+    match[1].replace(DETAIL_URL, "").replace("/", "")
+  );
+
+  writeJSONFile(INDEX_FILE_PATH, { ids, timestamp: new Date().toISOString() });
 }
 
-export async function getDetail() {
-    const ids = readJSONFile(INDEX_FILE_PATH);
-    const count = ids.length;
-    for (let i = 0; i < count; i++) {
-        const id = ids[i];
-        printProgress(i, count, id);
-        await fetchSaveText(detailFilePath(id), detailUrl(id));
-    }
+export async function detail() {
+    return getDetail(SITE, detailUrl);
 }

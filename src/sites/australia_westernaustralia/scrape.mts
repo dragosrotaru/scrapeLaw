@@ -8,7 +8,7 @@ const detailUrl = (id: string) => "https://www.lpbwa.org.au/" + id.replace(/_/g,
 const SITE = "australia_westernaustralia";
 const INDEX_FILE_PATH = indexFilePath(SITE);
 
-export async function getIndex() {
+export async function index() {
     let index: CharacterIndex & PageIndex = {
         character: "a",
         page: 1,
@@ -55,6 +55,6 @@ export async function getIndex() {
     }
 }
 
-export async function getDetails() {
+export async function detail() {
    return getDetail(SITE, detailUrl);
 }

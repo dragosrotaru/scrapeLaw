@@ -6,7 +6,7 @@ const index_url = "https://portal.lawsociety.mb.ca/lookup/action.php?sort=contac
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-export async function getIndex() {
+export async function index() {
     const characters = 'abcdefghijklmnopqrstuvwxyz';
     let index = {
         last: "aa",

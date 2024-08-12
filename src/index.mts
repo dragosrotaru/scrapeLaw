@@ -1,4 +1,8 @@
 import { Option, program } from "commander";
+import { prepare } from "./2-prepare/index.mts";
+import { readTextFilesDir } from "./utility/io.mts";
+import { detailPath } from "./1-scrape/scrape.mts";
+import { represent } from "./3-represent/index.mts";
 
 const cli = program
     .name("law-dataset")
@@ -24,16 +28,22 @@ scrapeCMD
 
 prepareCMD
     .addOption(siteOption)
-    .action(async ({ site }) => {
+    .addOption(
+        new Option("-l, --limit <limit>", "sample limit")
+    )
+    .action(async ({ site, limit }) => {
         console.log("preparing", site);
-
+        const files = readTextFilesDir(detailPath(site));
+        console.log(prepare(files, Number(limit)));
     });
 
 representCMD
     .addOption(siteOption)
     .action(async ({ site }) => {
         console.log("representing", site);
-
+        const files = readTextFilesDir(detailPath(site));
+        const preparation = prepare(files);
+        console.log(represent(preparation));
     });
 
 extractCMD

@@ -1,0 +1,2 @@
+// indexType html
+// detailType html

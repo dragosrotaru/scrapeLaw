@@ -1,11 +1,9 @@
 import fs from "fs";
-import fetch from 'node-fetch';
-import { HttpsProxyAgent } from "https-proxy-agent";
 
 const index_url = "https://www.barreau.qc.ca/en/find-a-lawyer/results/?p="
 const detail_url = "https://www.barreau.qc.ca/en/find-a-lawyer/member/?id="
 
-export async function getIndex() {
+export async function index() {
     let index = {
         last: 1,
         pages: 1,
@@ -48,10 +46,7 @@ export async function getIndex() {
     }
 }
 
-const proxyUrl = 'http://USER:PASSWORD@p.webshare.io:80';
-// const agent = new HttpsProxyAgent(proxyUrl);
-
-export async function getDetail() {
+export async function detail() {
     const { results: index } = JSON.parse(fs.readFileSync("index.json", "utf8"));
     // todo remove these lines
     const filtered = index.filter(row => row.includes("/en/find-a-lawyer/member/?id="));

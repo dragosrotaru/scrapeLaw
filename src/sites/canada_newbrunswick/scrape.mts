@@ -43,7 +43,7 @@ async function api(search) {
   return await response.json();
 }
 
-export async function getIndex() {
+export async function index() {
   const file_name = "index.json";
   const characters = "abcdefghijklmnopqrstuvwxyz";
 
@@ -115,7 +115,7 @@ export async function getOver() {
   }
 }
 
-export async function getDetail() {
+export async function detail() {
   const { results } = JSON.parse(fs.readFileSync('index.json', 'utf8'));
   for (let i = 0; i < results.length; i++) {
       const { rg: id } = results[i];

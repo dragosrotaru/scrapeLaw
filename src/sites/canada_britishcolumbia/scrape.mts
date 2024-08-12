@@ -6,7 +6,7 @@ import { captchaSolver } from "../../utility/gpt.mts";
 const index_url =
   "https://www.lawsociety.bc.ca/lsbc/apps/lkup/directory/mbr-search.cfm?txt_search_type=1&txt_given_nm=&txt_city=&member_search=Search&is_submitted=1&results_no=10000&txt_last_nm=";
 
-export async function getIndex() {
+export async function index() {
   const chars = "abcdefghijklmnopqrstuvwxyz";
   let index = {
     last: "aa",
@@ -43,7 +43,7 @@ export async function getIndex() {
   }
 }
 
-export async function getDetail() {
+export async function detail() {
   const { results: index } = JSON.parse(fs.readFileSync("index.json", "utf8"));
   const ids = index.map(
     (row) => row.match(/mbr-details\.cfm\?encrypted=([^"]+)#_toph1/)[1]

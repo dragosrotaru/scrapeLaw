@@ -19,6 +19,7 @@ export function readJSONFile(path: string): JASON {
  * @returns 
  */
 export function readTextFilesDir(path: string): { id: string, data: string }[] {
+  console.log(path);
   const files = fs.readdirSync(path);
   return files.map(file => {
     return {
@@ -40,6 +41,14 @@ export function writeJSONFile(path: string, data: JASON) {
 export function writeTextFile(path: string, data: string) {
   fs.writeFileSync(path, data);
 }
+
+
+// Using A Proxy
+// import fetch from 'node-fetch';
+// import { HttpsProxyAgent } from "https-proxy-agent";
+// const proxyUrl = 'http://USER:PASSWORD@p.webshare.io:80';
+// const agent = new HttpsProxyAgent(proxyUrl);
+
 
 /**
  * Fetch JSON Data

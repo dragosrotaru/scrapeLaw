@@ -1,6 +1,5 @@
-import { printProgress } from "../../1-scrape/print.mts";
-import { dataPath } from "../../1-scrape/scrape.mts";
-import { fetchSaveJSON, fileExists, readJSONFile } from "../../utility/io.mts";
+import { dataPath, getDetail } from "../../1-scrape/scrape.mts";
+import { fetchSaveJSON } from "../../utility/io.mts";
 import { JASON } from "../../utility/types.mts";
 
 /*
@@ -12,72 +11,54 @@ Endpoints:
 */
 
 export const SITE = "australia_nsw";
-export const DATA_PATH = dataPath(SITE);
-export const BASE_URL = "https://az-ae-app-fal-prod-webservice.azurewebsites.net/api/";
+export const BASE_URL =
+  "https://az-ae-app-fal-prod-webservice.azurewebsites.net/api/";
+
 type Endpoint = "lawyer" | "practice" | "mediator";
 
-
 type Index = {
-    resultCount: number;
-    results: JASON[];
-}
+  resultCount: number;
+  results: JASON[];
+};
 
 const PAGE_SIZE = 100000;
 
 function indexFilePath(endpoint: Endpoint): string {
-    return DATA_PATH +`${endpoint}/index.json`;
+  return dataPath(SITE) + `${endpoint}/index.json`;
 }
-function detailFilePath(endpoint: Endpoint, id: string): string {
-    return DATA_PATH + `${endpoint}/detail/${id}.json`;
-}
-
-function formURL(endpoint: Endpoint): string {
-    return BASE_URL + endpoint + "/";
+function formURL(endpoint: Endpoint, id?: string): string {
+  const URL = BASE_URL + endpoint + "/";
+  if (!id) return URL;
+  return URL + endpoint === "practice" ? id.replace("_", "/") : id;
 }
 
 export async function index(endpoint: Endpoint): Promise<Index> {
-    const index = await fetchSaveJSON(indexFilePath(endpoint), formURL(endpoint), {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ "page": 1, "pageSize": PAGE_SIZE }),
-    });
-    // todo validate schema
-    if (index.results?.length === PAGE_SIZE) {
-        throw new Error("Index is incomplete, PAGE_SIZE maxed out");
+  const index = await fetchSaveJSON(
+    indexFilePath(endpoint),
+    formURL(endpoint),
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ page: 1, pageSize: PAGE_SIZE }),
     }
-    if (index.resultCount !== index.results?.length) throw new Error("resultCount does not match results length");
-    if (index.resultCount === 0 || index.results?.length === 0) throw new Error("No results returned");
-    return index;
+  );
+  // todo validate schema
+  if (index.results?.length === PAGE_SIZE) {
+    throw new Error("Index is incomplete, PAGE_SIZE maxed out");
+  }
+  if (index.resultCount !== index.results?.length)
+    throw new Error("resultCount does not match results length");
+  if (index.resultCount === 0 || index.results?.length === 0)
+    throw new Error("No results returned");
+  return index;
 }
 
-export async function detail(endpoint: Endpoint) {
-    // Get Index
-    const indexFileName = indexFilePath(endpoint);
-    const index = readJSONFile(indexFileName);
-    const { results } = index;
-    const count = results.length;
-    console.log("count: ", count);
-
-    for (let i = 0; i < count; i++) {
-        const item = results[i];
-
-        const id = endpoint === "practice" ? item.compositeKey : item.id;
-
-        printProgress(i, count, id);
-        
-        const filePath = detailFilePath(endpoint, id);
-        
-        // check if file exists
-        if (fileExists(filePath)) {
-            console.log("exists, skipping ", id);
-            continue;
-        }
-
-        const slug = endpoint === "practice" ? id.replace("_", "/") : id;
-
-        // fetch and save
-        await fetchSaveJSON(filePath, formURL(endpoint) + slug)
-    }
-}
+export const detail = (endpoint: Endpoint) =>
+  getDetail(
+    SITE,
+    (id: string) => formURL(endpoint, id),
+    "json",
+    (record) => (endpoint === "practice" ? record.compositeKey : record.id)
+  );

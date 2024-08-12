@@ -7,7 +7,7 @@ const INDEX_FILE_PATH = indexFilePath(SITE);
 const INDEX_URL = "https://www.wabar.asn.au/find-a-barrister/view-all-barristers/";
 const detailUrl = (barrister: string) => `https://www.wabar.asn.au/barrister/${barrister}/`;
 
-export async function getIndex() {
+export async function index() {
     const html = await fetchText(INDEX_URL);
     
     // regex all hrefs <a href="https://www.wabar.asn.au/barrister/[CONTENT]/">Abbott, Geoff</a>
@@ -27,6 +27,6 @@ export async function getIndex() {
     return writeJSONFile(INDEX_FILE_PATH, { ids });
 }
 
-export async function getDetails() {
+export async function detail() {
     return getDetail(SITE, detailUrl);
 }

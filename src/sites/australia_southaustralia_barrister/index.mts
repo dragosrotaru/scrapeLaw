@@ -1,0 +1,2 @@
+// detailType json
+// indexType json

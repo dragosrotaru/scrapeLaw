@@ -1,19 +1,15 @@
 // 3rd Party
-import fs from "fs";
 import puppeteer from "puppeteer";
 
-// Global
-import { ROOT_DATA_PATH } from "../../parameters.mts";
-
 // This Step
-import { indexByCharacter } from "../../1-scrape/scrape.mts";
+import { indexByCharacter, indexFilePath } from "../../1-scrape/scrape.mts";
 
 const INDEX_URL = "https://www.lawsocietysa.asn.au/Public/Community/Register_Practising_Certificates.aspx";
 
-const DATA_PATH = ROOT_DATA_PATH + "australia_southaustralia/";
-const INDEX_FILE_PATH = DATA_PATH + "index.json";
+const SITE = "australia_southaustralia";
+const INDEX_FILE_PATH = indexFilePath(SITE);
 
-export async function getIndex() {
+export async function index() {
     const browser = await puppeteer.launch({ headless: false });
     const page = await browser.newPage();
     await page.goto(INDEX_URL);

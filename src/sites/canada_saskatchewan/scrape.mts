@@ -1,25 +1,22 @@
-// Global
-import { ROOT_DATA_PATH } from "../../parameters.mts";
-
 // Utility
 import { fetchJSON, fetchSaveText, fileExists, readJSONFile } from "../../utility/io.mts";
 
 // This Step
-import { detailFilePath, indexByCharacter } from "../../1-scrape/scrape.mts";
+import { detailFilePath, indexByCharacter, indexFilePath } from "../../1-scrape/scrape.mts";
 
 // https://lss.alinityapp.com/client/publicdirectory
 // https://lss.alinityapp.com/Client/PublicDirectory/Registrant/440daace-43ce-ed11-bd6e-000c29b4f7fc
 // same as new brunswick
 
-const DATA_PATH = ROOT_DATA_PATH + "canada_saskatchewan/";
-const INDEX_FILE_PATH = DATA_PATH + "index.json";
+
+const SITE = "canada_saskatchewan";
+const INDEX_FILE_PATH = indexFilePath(SITE);
 
 const INDEX_URL = "https://lss.alinityapp.com/client/PublicDirectory/Registrants";
 const detailUrl = (id: string) => `https://lss.alinityapp.com/Client/PublicDirectory/Registrant/${id}`;
 
-export async function getIndex() {
+export async function index() {
     return indexByCharacter(INDEX_FILE_PATH, async (character) => {
-        
         const body = new FormData();
         body.append("querySID", "1000601");
         body.append(
@@ -48,12 +45,12 @@ export async function getIndex() {
     });
 }
 
-export async function getDetail() {
+export async function detail() {
     const { results } = readJSONFile(INDEX_FILE_PATH);
     const count = results.length;
     for (let i = 0; i < count; i++) {
         const { rg: id } = results[i];
-        const filePath = detailFilePath(DATA_PATH)(id);
+        const filePath = detailFilePath(SITE)("html")(id);
         if (fileExists(filePath)) {
             console.log('skipping', id);
             continue;

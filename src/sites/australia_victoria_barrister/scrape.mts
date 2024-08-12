@@ -1,7 +1,5 @@
-process.env.NODE_OPTIONS = "--no-deprecation";
-
 import { JSDOM } from "jsdom";
-import { indexByPage, detailFilePath, indexFilePath, dataPath } from "../../1-scrape/scrape.mts";
+import { indexByPage, detailFilePath, indexFilePath } from "../../1-scrape/scrape.mts";
 import { fetchSaveText, fetchText, readJSONFile } from "../../utility/io.mts";
 import { printProgress } from "../../1-scrape/print.mts";
 
@@ -9,10 +7,9 @@ const INDEX_URL = "https://www.vicbar.com.au/find-barrister?term=&signed_bar_rol
 const detailUrl = (id: string) =>  "https://www.vicbar.com.au/profile/" + id;
 
 const SITE = "australia_victoria_barrister";
-const DATA_PATH = dataPath(SITE);
 const INDEX_FILE_PATH = indexFilePath(SITE);
 
-export async function getIndex() {
+export async function index() {
     return indexByPage(INDEX_FILE_PATH, async (page: number) => {
         // get page html
         const url = new URL(INDEX_URL);
@@ -37,13 +34,13 @@ export async function getIndex() {
     });
 }
 
-export async function getDetail() {
+export async function detail() {
     const { results } = readJSONFile(INDEX_FILE_PATH);
     const ids = results.map(b => b.match(/about="\/profile\/(\d+)"/)[1])
     const count = ids.length;
     for (let i = 0; i < count; i++) {
         const id = ids[i];
         printProgress(i, count, id);
-        await fetchSaveText(detailFilePath(DATA_PATH)(id), detailUrl(id));
+        await fetchSaveText(detailFilePath(SITE)("html")(id), detailUrl(id));
     }
 }

@@ -3,7 +3,7 @@ import fs from "fs";
 // https://www.qls.com.au/Directory-Search#
 // https://www.qls.com.au/Pages/Register
 
-export async function getIndex() {
+export async function index() {
     const pages = [
         "https://www.qls.com.au/getattachment/33120c21-4c06-4aba-8596-0a039cc3afa2/register-of-solicitors-20240320-a-f.pdf",
         "https://www.qls.com.au/getattachment/deebcbe5-e3ba-482b-8801-d1151023aec8/register-of-solicitors-20240320-g-l.pdf",
