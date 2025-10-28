@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "node:fs";
 
 const index_url =
   "https://lsnb.alinityapp.com/Client/PublicDirectory/Registrants";
@@ -132,3 +132,5 @@ export async function detail() {
       // await new Promise(resolve => setTimeout(resolve, Math.random() * 10000 + 1000));
   }
 }
+
+index();
