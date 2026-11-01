@@ -1,4 +1,4 @@
-import { dataPath, getDetail, indexFilePath, indexHTMLFilePath } from "../../1-scrape/scrape.mts";
+import { getDetail, indexFilePath, indexHTMLFilePath } from "../../1-scrape/scrape.mts";
 import { fetchSaveText, writeJSONFile } from "../../utility/io.mts";
 
 const SITE = "canada_yukon";

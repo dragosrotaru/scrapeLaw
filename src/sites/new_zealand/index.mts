@@ -2,7 +2,8 @@
 // detailType html
 
 interface Index {
-    "char": "w",
-    "page": 5,
-    "results": string[] // slugs
+  character: string;
+  page: number;
+  ids: string[]; // slugs
+  timestamp: string;
 }

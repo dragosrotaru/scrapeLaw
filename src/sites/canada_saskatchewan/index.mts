@@ -1,7 +1,10 @@
 // indexType json
 // detailType html
 
+import { JASON } from "../../utility/types.mts";
+
 interface Index {
-    "last": "z",
-    "results": any[]
+    character: string;
+    ids: JASON[];
+    timestamp: string;
 }

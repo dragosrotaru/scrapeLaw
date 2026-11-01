@@ -1,19 +1,19 @@
 // Utility
-import { fetchJSON, fetchSaveText, fileExists, readJSONFile } from "../../utility/io.mts";
+import { fetchJSON } from "../../utility/io.mts";
 
 // This Step
-import { detailFilePath, indexByCharacter, indexFilePath } from "../../1-scrape/scrape.mts";
+import { getDetail, indexByCharacter, indexFilePath } from "../../1-scrape/scrape.mts";
 
 // https://lss.alinityapp.com/client/publicdirectory
-// https://lss.alinityapp.com/Client/PublicDirectory/Registrant/440daace-43ce-ed11-bd6e-000c29b4f7fc
 // same as new brunswick
 
 
 const SITE = "canada_saskatchewan";
 const INDEX_FILE_PATH = indexFilePath(SITE);
 
-const INDEX_URL = "https://lss.alinityapp.com/client/PublicDirectory/Registrants";
-const detailUrl = (id: string) => `https://lss.alinityapp.com/Client/PublicDirectory/Registrant/${id}`;
+const BASE_URL = "https://lss.alinityapp.com/client/PublicDirectory/";
+const INDEX_URL = BASE_URL + "Registrants";
+const detailUrl = (id: string) => BASE_URL + `Registrant/${id}`;
 
 export async function index() {
     return indexByCharacter(INDEX_FILE_PATH, async (character) => {
@@ -40,22 +40,12 @@ export async function index() {
             method: "POST",
             body,
           });
+        // todo factor out
         await new Promise(resolve => setTimeout(resolve, Math.random() * 10000 + 5000));
         return json.Records;
     });
 }
 
 export async function detail() {
-    const { results } = readJSONFile(INDEX_FILE_PATH);
-    const count = results.length;
-    for (let i = 0; i < count; i++) {
-        const { rg: id } = results[i];
-        const filePath = detailFilePath(SITE)("html")(id);
-        if (fileExists(filePath)) {
-            console.log('skipping', id);
-            continue;
-        }
-        await fetchSaveText(filePath, detailUrl(id));
-        // await new Promise(resolve => setTimeout(resolve, Math.random() * 10000 + 1000));
-    }
+    return getDetail(SITE, detailUrl, "html", (record) => record.rg);
 }

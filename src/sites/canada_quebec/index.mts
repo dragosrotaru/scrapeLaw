@@ -2,7 +2,8 @@
 // detailType html
 
 interface Index {
-  last: number;
-  pages: number;
-  results: string[]; // html
+  page: number,
+  totalPages: number,
+  ids: string[], // html results
+  timestamp: string;
 }

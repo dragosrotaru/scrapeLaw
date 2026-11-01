@@ -2,6 +2,7 @@
 // detailType html
 
 interface Index {
-    "page": number,
-    "results": string[]
-    }
+  page: number;
+  ids: string[];
+  timestamp: string;
+}
