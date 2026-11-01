@@ -23,7 +23,7 @@ scrapeCMD
     .addOption(siteOption)
     .action(async ({ site }) => {
         console.log("scraping", site);
-
+        await import(`./sites/${site}/scrape.mts`).then(module => module.index());
     });
 
 prepareCMD
