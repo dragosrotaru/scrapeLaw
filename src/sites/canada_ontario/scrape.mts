@@ -6,7 +6,7 @@ import { detailFilePath, indexFilePath } from "../../1-scrape/scrape.mts";
 const SITE = "canada_ontario";
 const INDEX_FILE_PATH = indexFilePath(SITE);
 
-const API_KEY = "REDACTED_LSO_API_KEY";
+const API_KEY = process.env.LSO_API_KEY ?? "";
 const INDEX_URL = "https://lawsocietyontario.search.windows.net/indexes/lsolpindexprd/docs?api-version=2017-11-11&$count=true&$top=1000&$skip=";
 const DETAIL_URL = "https://lso.ca/public-resources/finding-a-lawyer-or-paralegal/directory-search/member?MemberNumber=";
 

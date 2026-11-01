@@ -46,7 +46,7 @@ export function writeTextFile(path: string, data: string) {
 // Using A Proxy
 // import fetch from 'node-fetch';
 // import { HttpsProxyAgent } from "https-proxy-agent";
-// const proxyUrl = 'http://USER:PASSWORD@p.webshare.io:80';
+// const proxyUrl = process.env.PROXY_URL;
 // const agent = new HttpsProxyAgent(proxyUrl);
 
 

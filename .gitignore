@@ -1,3 +1,14 @@
 node_modules
+.DS_Store
+.env
+
+# scraped data stays local
 data
 data_old
+*_progress_*.json
+src/sites/canada_alberta/sample.mts
+
+# python
+__pycache__
+*.log
+venv

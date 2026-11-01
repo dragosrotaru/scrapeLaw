@@ -61,7 +61,7 @@ export async function detail() {
     let response = await fetch(detail_url, {
       headers: {
         Cookie:
-          "CFID=REDACTED; CFTOKEN=REDACTED; JSESSIONID=REDACTED",
+          process.env.LSBC_COOKIE ?? "",
       },
     });
 
@@ -105,7 +105,7 @@ async function getEmailInner(id, captcha_stats) {
     Connection: "keep-alive",
     Referer: `https://www.lawsociety.bc.ca/lsbc/apps/lkup/directory/mbr-details.cfm?encrypted=${id}`,
     Cookie:
-      "JSESSIONID=REDACTED; CFID=REDACTED; CFTOKEN=REDACTED",
+      process.env.LSBC_COOKIE ?? "",
     "Upgrade-Insecure-Requests": "1",
     "Sec-Fetch-Dest": "iframe",
     "Sec-Fetch-Mode": "navigate",

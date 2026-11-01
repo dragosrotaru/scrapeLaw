@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import type { NullableString } from "./types.mts";
 
 const openai = new OpenAI({
-  apiKey: "REDACTED_OPENAI_API_KEY",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 /**

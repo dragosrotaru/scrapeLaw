@@ -1,5 +1,5 @@
 
-const ROOT_PROJECT_PATH = "/Users/megacuck/Projects/law/";
+const ROOT_PROJECT_PATH = new URL("../", import.meta.url).pathname; // repository root
 export const ROOT_DATA_PATH = ROOT_PROJECT_PATH + "data/";
 export const ROOT_SCRAPER_PATH = ROOT_PROJECT_PATH + "sites/";
 

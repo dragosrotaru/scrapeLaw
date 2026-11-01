@@ -1,4 +1,12 @@
 {
+  "name": "scrapelaw",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Scrapers and a parsing pipeline for public lawyer and barrister directories",
+  "type": "module",
+  "scripts": {
+    "start": "npx tsx --env-file=.env src/index.mts"
+  },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "cheerio": "^1.0.0-rc.12",

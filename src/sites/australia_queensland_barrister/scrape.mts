@@ -13,8 +13,8 @@ const DETAIL_URL = BASE_URL + "getMemberDetails/";
 const headers = {
     "BAQAuth": "Q9MLYo7giVGr",
     "X-Requested-With": "XMLHttpRequest",
-    "X-XSRF-TOKEN": "REDACTED",
-    "Cookie": "JSESSIONID=REDACTED; XSRF-TOKEN=REDACTED",
+    "X-XSRF-TOKEN": process.env.QLD_XSRF_TOKEN ?? "",
+    "Cookie": `JSESSIONID=${process.env.QLD_SESSION_ID}; XSRF-TOKEN=${process.env.QLD_XSRF_TOKEN}`,
 };
 
 const SITE = "australia_queensland_barrister";
