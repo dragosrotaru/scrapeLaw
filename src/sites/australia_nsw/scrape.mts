@@ -1,6 +1,6 @@
 import { dataPath, getDetail } from "../../1-scrape/scrape.mts";
 import { fetchSaveJSON } from "../../utility/io.mts";
-import { JASON } from "../../utility/types.mts";
+import { Json } from "../../utility/types.mts";
 
 /*
 Endpoints: 
@@ -18,7 +18,7 @@ type Endpoint = "lawyer" | "practice" | "mediator";
 
 type Index = {
   resultCount: number;
-  results: JASON[];
+  results: Json[];
 };
 
 const PAGE_SIZE = 100000;

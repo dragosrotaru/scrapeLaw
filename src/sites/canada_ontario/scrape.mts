@@ -1,5 +1,5 @@
 import { fetchJSON, fetchSaveText, fileExists, readJSONFile, writeJSONFile } from "../../utility/io.mts";
-import { JASON } from "../../utility/types.mts";
+import { Json } from "../../utility/types.mts";
 import { printProgress } from "../../1-scrape/print.mts";
 import { detailFilePath, indexFilePath } from "../../1-scrape/scrape.mts";
 
@@ -20,7 +20,7 @@ export async function api(url) {
 }
 
 export async function index() {
-    const results: JASON[] = [];
+    const results: Json[] = [];
     // get first page
     const data = await api(INDEX_URL + "0");
     const count = data["@odata.count"];

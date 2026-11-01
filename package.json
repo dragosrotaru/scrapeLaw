@@ -3,9 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "description": "Scrapers and a parsing pipeline for public lawyer and barrister directories",
+  "author": "Dragos Rotaru",
   "type": "module",
   "scripts": {
-    "start": "npx tsx --env-file=.env src/index.mts"
+    "start": "npx tsx --env-file-if-exists=.env src/index.mts"
   },
   "dependencies": {
     "@googlemaps/google-maps-services-js": "^3.4.0",

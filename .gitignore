@@ -12,3 +12,7 @@ src/sites/canada_alberta/sample.mts
 __pycache__
 *.log
 venv
+
+# personal notes and one-off scripts, not part of the project
+notes
+src/python

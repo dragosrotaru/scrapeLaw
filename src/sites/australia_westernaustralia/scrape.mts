@@ -37,7 +37,7 @@ export async function index() {
                 index.page = 1;
                 break;
             } 
-            // <h3 class="clean"><a href="/alyx-lee-akroyd/829572"><i class="fa-solid fa-user"></i> Alyx Lee Akroyd</a></h3>
+            // <h3 class="clean"><a href="/jane-doe/123456"><i class="fa-solid fa-user"></i> Jane Doe</a></h3>
             // get hrefs and turn them info urls
             const results: string[] = [];
             const regex = /<h3 class="clean"><a href="\/([^"]+)">/g;

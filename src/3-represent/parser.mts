@@ -180,7 +180,6 @@ export function parseTag(token: string): Tag {
       if (value.startsWith("javascript:")) continue; // ignore hrefs containing javascript
       attributes.push({ name, value });
     }
-    console.log(attributes);
     return attributes;
   }
 

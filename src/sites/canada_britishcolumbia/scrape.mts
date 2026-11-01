@@ -78,10 +78,10 @@ function getEmailIds() {
   let email_files = [];
   console.log("files:", files.length);
   for (let i = 0; i < files.length; i++) {
-    const fime_name = files[i];
-    const text = fs.readFileSync(`detail/${fime_name}`, "utf8");
+    const file_name = files[i];
+    const text = fs.readFileSync(`detail/${file_name}`, "utf8");
     if (text.includes('href="javascript:showcap();"')) {
-      email_files.push(fime_name);
+      email_files.push(file_name);
     }
   }
   console.log("emails:", email_files.length);

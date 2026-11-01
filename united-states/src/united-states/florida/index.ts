@@ -62,7 +62,6 @@ export const index = async () => {
         }
         console.log(`Processing node: ${node.query}`);
         console.log(`Current index size: ${index.size}`);
-        console.log(`index: ${Array.from(index).join(", ")}`);
 
 
         let page = 1;

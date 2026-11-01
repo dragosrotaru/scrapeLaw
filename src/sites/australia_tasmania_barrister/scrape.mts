@@ -19,7 +19,7 @@ export async function getIndex() {
   const html = await fetchText(INDEX_URL);
   // todo save html
 
-  // <a href="https://tasbar.com.au/barrister/albert-dinelli/" class="barrister__inner">
+  // <a href="https://tasbar.com.au/barrister/jane-doe/" class="barrister__inner">
   const regex = /<a href="([^"]+)" class="barrister__inner">/g;
   const ids = [...html.matchAll(regex)].map((match) =>
     match[1].replace(DETAIL_URL, "").replace("/", "")

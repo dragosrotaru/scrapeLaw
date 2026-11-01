@@ -47,7 +47,7 @@ export async function index() {
       url.searchParams.set("page", index.page.toString());
       const html = await fetchText(url.toString());
 
-      // href="/register/ian-stewart-avison/?glh=1"
+      // href="/register/jane-doe/?glh=1"
       const ids = [...html.matchAll(/href="\/register\/([^\/]+)\/\?/g)].map(
         (m) => m[1]
       );

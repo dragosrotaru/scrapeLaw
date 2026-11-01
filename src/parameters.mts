@@ -10,7 +10,7 @@ export const REMOVE_HEAD = true; // remove head tags
 /* Represent */
 export const PRINT_LENGTH = 256; // truncation length for print
 export const OUTLIER_SAMPLES = 20;
-export const OUTLIER_DEINCREMENT = 0.001;
-export const OUTLIER_MAX_TRESHOLD = 1;
-export const OUTLIER_MIN_TRESHOLD = 0.95;
+export const OUTLIER_DECREMENT = 0.001;
+export const OUTLIER_MAX_THRESHOLD = 1;
+export const OUTLIER_MIN_THRESHOLD = 0.95;
 export const OUTLIER_ERROR_MARGIN = 0.005;

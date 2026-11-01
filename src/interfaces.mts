@@ -1,5 +1,5 @@
 import { readTextFilesDir } from "./utility/io.mts";
-import { JASON, Vector } from "./utility/types.mts";
+import { Json, Vector } from "./utility/types.mts";
 
 // Scrape
 
@@ -65,5 +65,5 @@ export interface Representation {
 
 export interface Sample {
   id: string;
-  data: JASON;
+  data: Json;
 }

@@ -10,7 +10,7 @@ const detailUrl = (barrister: string) => `https://www.wabar.asn.au/barrister/${b
 export async function index() {
     const html = await fetchText(INDEX_URL);
     
-    // regex all hrefs <a href="https://www.wabar.asn.au/barrister/[CONTENT]/">Abbott, Geoff</a>
+    // regex all hrefs <a href="https://www.wabar.asn.au/barrister/[CONTENT]/">Doe, Jane</a>
     const regex = /<a href="https:\/\/www.wabar.asn.au\/barrister\/([^"]+)">[^<]+<\/a>/g;
     const ids: string[] = [];
 

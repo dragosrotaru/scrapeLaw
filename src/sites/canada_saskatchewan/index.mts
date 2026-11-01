@@ -1,10 +1,10 @@
 // indexType json
 // detailType html
 
-import { JASON } from "../../utility/types.mts";
+import { Json } from "../../utility/types.mts";
 
 interface Index {
     character: string;
-    ids: JASON[];
+    ids: Json[];
     timestamp: string;
 }

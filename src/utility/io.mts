@@ -1,5 +1,5 @@
 import fs from "node:fs";
-import type { JASON } from "./types.mts";
+import type { Json } from "./types.mts";
 
 export function fileExists(path: string): boolean {
   return fs.existsSync(path);
@@ -9,7 +9,7 @@ export function fileExists(path: string): boolean {
  * Reads a JSON file from the filesystem
  * @param path
  */
-export function readJSONFile(path: string): JASON {
+export function readJSONFile(path: string): Json {
   return JSON.parse(fs.readFileSync(path, "utf-8"));
 }
 
@@ -34,7 +34,7 @@ export function readTextFilesDir(path: string): { id: string, data: string }[] {
  * @param path
  * @param data
  */
-export function writeJSONFile(path: string, data: JASON) {
+export function writeJSONFile(path: string, data: Json) {
   fs.writeFileSync(path, JSON.stringify(data, null, 4));
 }
 
@@ -55,7 +55,7 @@ export function writeTextFile(path: string, data: string) {
  * @param url 
  * @returns 
  */
-export async function fetchJSON(url: string, config?: RequestInit): Promise<JASON> {
+export async function fetchJSON(url: string, config?: RequestInit): Promise<Json> {
   const response = await fetch(url, config);
   return response.json();
 }
@@ -65,7 +65,7 @@ export async function fetchText(url: string, config?: RequestInit): Promise<stri
   return response.text();
 }
 
-export async function fetchSaveJSON(path: string, url: string, config?: RequestInit): Promise<JASON> {
+export async function fetchSaveJSON(path: string, url: string, config?: RequestInit): Promise<Json> {
   const data = await fetchJSON(url, config);
   writeJSONFile(path, data);
   return data;

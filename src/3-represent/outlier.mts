@@ -1,6 +1,6 @@
 // Global
 import type { CorpusFrequency, CorpusMaps, Outlier, VectorCorpus } from "../interfaces.mts";
-import { OUTLIER_DEINCREMENT, OUTLIER_ERROR_MARGIN, OUTLIER_MAX_TRESHOLD, OUTLIER_MIN_TRESHOLD, OUTLIER_SAMPLES } from "../parameters.mts";
+import { OUTLIER_DECREMENT, OUTLIER_ERROR_MARGIN, OUTLIER_MAX_THRESHOLD, OUTLIER_MIN_THRESHOLD, OUTLIER_SAMPLES } from "../parameters.mts";
 
 // Utility
 import type { Vector } from "../utility/types.mts";
@@ -32,9 +32,9 @@ export function outlierDetection(
     for (const sample of samples) {
   
       const lengths: [number, number][] = [];
-      let threshold = OUTLIER_MAX_TRESHOLD;
+      let threshold = OUTLIER_MAX_THRESHOLD;
       
-      while (threshold > OUTLIER_MIN_TRESHOLD) {
+      while (threshold > OUTLIER_MIN_THRESHOLD) {
         // apply static threshold and filter out static tokens
         const vector = applyStaticThreshold(sample, maps, freq, threshold).filter((t) => !isStaticToken(t));
         
@@ -53,7 +53,7 @@ export function outlierDetection(
         }
   
         // decrement the threshold
-        threshold = threshold - OUTLIER_DEINCREMENT;
+        threshold = threshold - OUTLIER_DECREMENT;
       }
     }
   
@@ -80,7 +80,7 @@ export function outlierDetection(
         freq,
         meanStablePoint
       );
-      const unstableVec = applyStaticThreshold(sample, maps, freq, OUTLIER_MAX_TRESHOLD);
+      const unstableVec = applyStaticThreshold(sample, maps, freq, OUTLIER_MAX_THRESHOLD);
       const diff = unstableVec.filter((v) => !stableVec.includes(v));
       diff.map((v) => diffSet.add(v));
     }

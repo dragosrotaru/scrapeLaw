@@ -1,6 +1,6 @@
-# Law Directory Scraper
+# US state bar scrapers
 
-The purpose of this code is to scrape all of the lawyer and law firm contact data from all of the public bar association and law society directories across the US, Canada and elsewhere.
+A standalone TypeScript package (run with `tsx`) that collects member directories from US state bars. It is part of [scrapeLaw](../README.md). Shared helpers are in `src/lib/`: a resumable `AlphabetTree` for splitting searches that hit a result cap, a Puppeteer wrapper and JSON storage.
 
 ## Status
 
@@ -34,7 +34,7 @@ The purpose of this code is to scrape all of the lawyer and law firm contact dat
 - simple, paginated JSON API returns all results
 
 
-## TODO 
+## Next steps
 
 - add more easy regions
 - implement Michigan and Illinois
